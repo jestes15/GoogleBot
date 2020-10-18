@@ -10,6 +10,7 @@ import os
 import random as r
 import robin_stocks as robin
 
+import re
 from wolframclient.evaluation import WolframLanguageSession
 
 load_dotenv()
@@ -170,8 +171,13 @@ async def encode(ctx, get_string: str, using: str, get_choice: str):
 
 @bot.command(name='echo', help='Echos back user input')
 async def echo(ctx, user_input: str):
-    await discord.channel.TextChannel.trigger_typing(self=ctx)
-    await ctx.channel.send(user_input)
+    mes_ban1 = re.search('gay', ctx.content)
+
+    if mes_ban1:
+        await ctx.channel.send("i'm sorry, that message is not allowed.")
+    else:
+        await discord.channel.TextChannel.trigger_typing(self=ctx)
+        await ctx.channel.send(user_input)
 
 
 @bot.command(name='announce', help='Allows announcement to be used')
