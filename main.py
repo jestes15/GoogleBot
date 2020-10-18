@@ -9,8 +9,6 @@ import logging
 import os
 import random as r
 import robin_stocks as robin
-
-import re
 from wolframclient.evaluation import WolframLanguageSession
 
 load_dotenv()
