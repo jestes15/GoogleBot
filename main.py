@@ -293,12 +293,7 @@ async def evaluate(ctx, code: str):
 
 @bot.command(name='solve', help='testing')
 async def mathematica(ctx, function: str):
-    if function == 'clear':
-        clear_cmd = 'Clear["Global`*"]'
-        session.evaluate(clear_cmd)
-        await ctx.channel.send('The operation was successful')
-    else:
-        evaluated = session.evaluate(function)
-        await ctx.channel.send('```\n' + str(evaluated) + '```')
+    evaluated = session.evaluate(function)
+    await ctx.channel.send('```\n' + str(evaluated) + '```')
 
 bot.run(TOKEN)
