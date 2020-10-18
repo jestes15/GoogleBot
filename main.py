@@ -171,7 +171,7 @@ async def encode(ctx, get_string: str, using: str, get_choice: str):
 
 @bot.command(name='echo', help='Echos back user input')
 async def echo(ctx, user_input: str):
-    mes_ban1 = re.search('gay', ctx.content)
+    mes_ban1 = re.search('gay', user_input)
 
     if mes_ban1:
         await ctx.channel.send("i'm sorry, that message is not allowed.")
