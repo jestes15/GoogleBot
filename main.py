@@ -194,12 +194,9 @@ async def meme(ctx, me: str, quotes: str):
         1: 'Hello There',
         2: '*Nani*',
         3: 'Boi if you don\'t get that out of here',
-        4: '*China*',
-        5: 'Trump 2020',
-        6: '*Trump 2020*',
-        7: '||Trump 2020||'
+        4: '*China*'
     }
-    x = int(r.randint(1, 7))
+    x = int(r.randint(1, 4))
     await ctx.channel.send(meme_dictionary[x])
 
 
