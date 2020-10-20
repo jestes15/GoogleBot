@@ -10,6 +10,7 @@ import os
 import random as r
 import robin_stocks as robin
 from wolframclient.evaluation import WolframLanguageSession
+from time import sleep
 
 import asyncio as a
 
@@ -290,6 +291,7 @@ async def mathematica(ctx, function: str):
 
 
 # TODO Finish the clear command so it works correctly
+# TODO Finish reworking hello command
 """
 @bot.command(name='clear')
 async def purge(ctx, user: discord.Member = None, *, matches: str = None):
