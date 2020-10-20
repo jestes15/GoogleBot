@@ -224,7 +224,7 @@ async def image(ctx, me: str, memes: str, type_f=None):
         await ctx.channel.send(file=discord.File('Images/image' + x1 + '.jpg'))
 
 
-@bot.command(name='search', help='syntax=<book><chapter><start-verse><optional: end-verse>')
+@bot.command(name='search', help='syntax=for <book><chapter><start-verse><optional: end-verse>')
 async def GetBibleVerse(ctx, for2: str, book_name: str, chapter: int, verse: int, last_verse=0):
     await discord.channel.TextChannel.trigger_typing(self=ctx)
     location = 'Bible/' + book_name + '/' + book_name + '_' + str(chapter) + '.txt'
