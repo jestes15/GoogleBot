@@ -12,7 +12,7 @@ import robin_stocks as robin
 from wolframclient.evaluation import WolframLanguageSession
 from time import sleep
 from googletrans import Translator
-
+import googletrans
 import asyncio as a
 
 load_dotenv()
@@ -301,11 +301,12 @@ async def mathematica(ctx, function: str):
 
 
 @bot.command(name='translate', help='Testing')
-async def translate(ctx, user_input: str):
+async def translate(ctx, user_input: str, trans_lang: str):
     translator = Translator()
-    translations = translator.translate([user_input], dest='ja')
+    list_lang = googletrans.LANGCODES
+    translations = translator.translate([user_input], dest=list_lang[trans_lang])
     for translation in translations:
-        await ctx.channel.send(translation.text)
+        await ctx.channel.send(translation.origin + ' -> ' + translation.text)
 
 
 # TODO Finish the clear command so it works correctly
