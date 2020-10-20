@@ -11,6 +11,8 @@ import random as r
 import robin_stocks as robin
 from wolframclient.evaluation import WolframLanguageSession
 
+import asyncio as a
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 username = os.getenv('ROBINHOOD_USERNAME')
@@ -137,10 +139,7 @@ async def mutation(ctx, stock: str):
 @bot.command(name='hello', help='Says hello back')
 async def on_message(message):
     await discord.channel.TextChannel.trigger_typing(self=message)
-    if message.author == bot.user:
-        quote = "bruh"
-    else:
-        quote = 'Hello mad lad'
+    quote = 'Hello mad lad'
     await message.channel.send(quote)
     # Sends Hello mad lad after the user prompts it in discord
 
@@ -290,9 +289,27 @@ async def mathematica(ctx, function: str):
     await ctx.channel.send('```\n' + str(evaluated) + '```')
 
 
+# TODO Finish the clear command so it works correctly
+"""
 @bot.command(name='clear')
-async def clear(ctx, usr_msg: str):
-    msg = f'{usr_msg} clearing now'
-    await ctx.channel.send(msg)
+async def purge(ctx, user: discord.Member = None, *, matches: str = None):
+    logger.info('purge', extra={'ctx': ctx})
+
+    def check_msg(msg):
+        if msg.id == ctx.message.id:
+            return True
+        if user is not None:
+            if msg.author.id != user.id:
+                return False
+        if matches is not None:
+            if matches not in msg.content:
+                return False
+        return True
+
+    deleted = await ctx.channel.purge(limit=None, check=check_msg)
+    msg = await ctx.send(i18n(ctx, 'purge', len(deleted)))
+    await a.sleep(2)
+    await msg.delete()
+"""
 
 bot.run(TOKEN)
