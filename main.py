@@ -289,4 +289,10 @@ async def mathematica(ctx, function: str):
     evaluated = session.evaluate(function)
     await ctx.channel.send('```\n' + str(evaluated) + '```')
 
+
+@bot.command(name='clear')
+async def clear(ctx, usr_msg: str):
+    msg = f'{usr_msg} clearing now'
+    await ctx.channel.send(msg)
+
 bot.run(TOKEN)
