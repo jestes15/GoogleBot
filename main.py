@@ -11,6 +11,7 @@ import random as r
 import robin_stocks as robin
 from wolframclient.evaluation import WolframLanguageSession
 from time import sleep
+from googletrans import Translator
 
 import asyncio as a
 
@@ -140,8 +141,17 @@ async def mutation(ctx, stock: str):
 @bot.command(name='hello', help='Says hello back')
 async def on_message(message):
     await discord.channel.TextChannel.trigger_typing(self=message)
-    quote = 'Hello mad lad'
-    await message.channel.send(quote)
+    hello_dictionary = {
+        1: 'Hello Mad Lad',
+        2: 'Howdy Partner',
+        3: "'Ello Govena",
+        4: "Sup Bruh",
+        5: "こんにちは",
+        6: "Go away",
+        7: "ねじオフ"
+    }
+    x = r.randint(1, 7)
+    await message.channel.send(hello_dictionary[x])
     # Sends Hello mad lad after the user prompts it in discord
 
 
@@ -290,8 +300,16 @@ async def mathematica(ctx, function: str):
     await ctx.channel.send('```\n' + str(evaluated) + '```')
 
 
+@bot.command(name='translate', help='Testing')
+async def translate(ctx, user_input: str):
+    translator = Translator()
+    translations = translator.translate([user_input], dest='ja')
+    for translation in translations:
+        await ctx.channel.send(translation.text)
+
+
 # TODO Finish the clear command so it works correctly
-# TODO Finish reworking hello command
+# TODO Finish sprucing up the translate command
 """
 @bot.command(name='clear')
 async def purge(ctx, user: discord.Member = None, *, matches: str = None):
