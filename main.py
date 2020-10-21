@@ -306,7 +306,7 @@ async def translate(ctx, user_input: str, trans_lang: str):
     list_lang = googletrans.LANGCODES
     translations = translator.translate([user_input], dest=list_lang[trans_lang])
     for translation in translations:
-        await ctx.channel.send(translation.origin + ' -> ' + translation.text)
+        await ctx.channel.send(translation.origin + ' ----> ' + translation.text)
 
 
 # TODO Finish the clear command so it works correctly
