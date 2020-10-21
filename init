@@ -6,3 +6,4 @@ pip3 install python-dotenv
 pip3 install google
 pip3 install robin-stocks
 pip3 install wolframclient
+pip3 install googletrans
