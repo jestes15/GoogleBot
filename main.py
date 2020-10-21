@@ -291,13 +291,13 @@ async def evaluate(ctx, code: str):
     await ctx.channel.send(g3)
 
 
-@bot.command(name='solve', help='testing')
+@bot.command(name='solve', help='Solves any function given in Wolfram Format')
 async def mathematica(ctx, function: str):
     evaluated = session.evaluate(function)
     await ctx.channel.send('```\n' + str(evaluated) + '```')
 
 
-@bot.command(name='translate', help='Testing')
+@bot.command(name='translate', help='Translates a string to another language')
 async def translate(ctx, user_input: str, to: str, trans_lang: str):
     translator = Translator()
     list_lang = googletrans.LANGCODES
