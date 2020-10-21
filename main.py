@@ -308,7 +308,6 @@ async def mathematica(ctx, function: str):
 @bot.command(name='translate', help='Testing')
 async def translate(ctx, user_input: str, trans_lang: str):
     translator = Translator()
-    translations = translator.translate([user_input], dest=[trans_lang])
     list_lang = googletrans.LANGCODES
     translations = translator.translate([user_input], dest=list_lang[trans_lang])
     for translation in translations:
