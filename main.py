@@ -12,7 +12,7 @@ from wolframclient.evaluation import WolframLanguageSession
 from time import sleep
 from googletrans import Translator
 import googletrans
-import asyncio as a
+
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -310,5 +310,13 @@ async def translate(ctx, user_input: str, to: str, trans_lang: str):
             await ctx.channel.send(error_msg)
         else:
             await ctx.channel.send(msg)
+
+
+@bot.command(name='roll', help='Roll a Dice')
+async def roll(ctx, dice_type: str):
+    dice_type1 = dice_type.lower()
+    num = int(dice_type1.replace("d", ""))
+    result = r.randint(1, num)
+    await ctx.channel.send(result)
 
 bot.run(TOKEN)
