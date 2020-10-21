@@ -5,7 +5,6 @@ import discord
 from dotenv import load_dotenv
 import encryption_cmd as cmd
 from googlesearch import search
-import logging
 import os
 import random as r
 import robin_stocks as robin
@@ -25,13 +24,6 @@ robin.authentication.login(username, password)
 bot = commands.Bot(command_prefix="Hey Google, ")
 
 today = date.today()
-
-LOG = os.getcwd() + "/tmp/ccd.log"
-logging.basicConfig(filename=LOG, filemode="w", level=logging.DEBUG)
-console = logging.StreamHandler()
-console.setLevel(logging.ERROR)
-logging.getLogger("").addHandler(console)
-logger = logging.getLogger(__name__)
 
 session = WolframLanguageSession()
 print(session)
@@ -311,7 +303,13 @@ async def translate(ctx, user_input: str, to: str, trans_lang: str):
     list_lang = googletrans.LANGCODES
     translations = translator.translate([user_input], dest=list_lang[trans_lang])
     for translation in translations:
-        await ctx.channel.send(translation.origin + ' ----> ' + translation.text)
+        msg = translation.origin + ' ----> ' + translation.text
+        error_msg = 'The section of text you want to translate makes the message over 2000 characters, '\
+                    'please shorten it'
+        if len(msg) > 2000:
+            await ctx.channel.send(error_msg)
+        else:
+            await ctx.channel.send(msg)
 
 
 # TODO Finish the clear command so it works correctly
@@ -333,7 +331,7 @@ async def purge(ctx, user: discord.Member = None, *, matches: str = None):
 
     deleted = await ctx.channel.purge(limit=None, check=check_msg)
     msg = await ctx.send(i18n(ctx, 'purge', len(deleted)))
-    await a.sleep(2)
+    await sleep(2)
     await msg.delete()
 """
 
