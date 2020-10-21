@@ -209,9 +209,14 @@ async def meme(ctx, me: str, quotes: str):
     x = int(r.randint(1, 4))
     await ctx.channel.send(meme_dictionary[x])
 
+audio_dict = {
+    1: 'playme.mp3',
+    2: 'PlayMe2.mp3'
+}
+
 
 @bot.command(name='send', help='syntax: send me memes. Shows an image')
-async def image(ctx, me: str, memes: str, type_f=None):
+async def image(ctx, me: str, memes: str, type_f=None, choice=None):
     d1 = today.strftime("%m/%d/%Y")  # Gets current date
     await discord.channel.TextChannel.trigger_typing(self=ctx)
     if d1 == "09/11/2001":
@@ -226,7 +231,7 @@ async def image(ctx, me: str, memes: str, type_f=None):
         await ctx.channel.send(file=discord.File('Images/image.jpg'))
     if type_f is not None:
         if type_f == 'mp3':
-            await ctx.channel.send(file=discord.File('Audio/playme.mp3'))
+            await ctx.channel.send(file=discord.File('Audio/' + audio_dict[int(choice)]))
         if type_f == 'gif':
             await ctx.channel.send(file=discord.File('GIF/258c8822b6a11bdc8d0060bd9bb47df3.gif'))
     else:
