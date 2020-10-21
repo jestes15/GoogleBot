@@ -67,23 +67,18 @@ async def load_stock(ctx, option=None, stocks=None, str3=None, everything=None):
 
     if option == 'common':
         if everything == 'everything':
-            stock_list2 = {}
-            stock_list = []
-            j = 0
+            stock_list = {}
             with open('common-stock-list.txt', 'r') as f:
                 array = f.readlines()
-            for row in array:
-                stock_list.append(row)
-                j += 1
             current_date = datetime.datetime.now()
             d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
-            stock_list2[0] = d2
+            stock_list[0] = d2
 
             await ctx.channel.send("Please wait while I compile the information you have "
                                    "requested, approximately 2 to 3 seconds")
             await discord.channel.TextChannel.trigger_typing(self=ctx)
             num = 0
-            sub = stock_list2[0] + '\n'
+            sub = stock_list[0] + '\n'
             while num < (len(array)):
                 string = array[num]
                 stock_price = robin.stocks.get_latest_price(array[num])
@@ -96,23 +91,18 @@ async def load_stock(ctx, option=None, stocks=None, str3=None, everything=None):
             await ctx.channel.send(sub)
 
         else:
-            stock_list2 = {}
-            stock_list = []
-            j = 0
+            stock_list = {}
             with open('common-stock-list.txt', 'r') as f:
                 array = f.readlines()
-            for row in array:
-                stock_list.append(row)
-                j += 1
             current_date = datetime.datetime.now()
             d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
-            stock_list2[0] = d2
+            stock_list[0] = d2
 
             await ctx.channel.send("Please wait while I compile the information you have requested, approximately 2 "
                                    "to 3 seconds")
             await discord.channel.TextChannel.trigger_typing(self=ctx)
             num = 0
-            sub = stock_list2[0] + '\n'
+            sub = stock_list[0] + '\n'
             while num < (len(array)):
                 string = array[num]
                 stock_price = robin.stocks.get_latest_price(array[num])
@@ -312,7 +302,7 @@ async def translate(ctx, user_input: str, to: str, trans_lang: str):
             await ctx.channel.send(msg)
 
 
-@bot.command(name='roll', help='Roll a Dice')
+@bot.command(name='roll', help='Rolls a dice')
 async def roll(ctx, dice_type: str):
     dice_type1 = dice_type.lower()
     num = int(dice_type1.replace("d", ""))
