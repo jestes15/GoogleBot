@@ -303,6 +303,7 @@ async def mathematica(ctx, function: str):
 @bot.command(name='translate', help='Testing')
 async def translate(ctx, user_input: str, trans_lang: str):
     translator = Translator()
+    translations = translator.translate([user_input], dest=[trans_lang])
     list_lang = googletrans.LANGCODES
     translations = translator.translate([user_input], dest=list_lang[trans_lang])
     for translation in translations:
@@ -310,7 +311,6 @@ async def translate(ctx, user_input: str, trans_lang: str):
 
 
 # TODO Finish the clear command so it works correctly
-# TODO Finish sprucing up the translate command
 """
 @bot.command(name='clear')
 async def purge(ctx, user: discord.Member = None, *, matches: str = None):
