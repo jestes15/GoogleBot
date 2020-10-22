@@ -36,84 +36,106 @@ async def on_ready():
     # Sends an online message to the aforementioned channel
 
 
+'async def load_stock(ctx, option=None, stocks=None, str3=None, everything=None):'
+
+
 @bot.command(name='get', help='Takes stock symbol, returns price')
-async def load_stock(ctx, option=None, stocks=None, str3=None, everything=None):
-    await discord.channel.TextChannel.trigger_typing(self=ctx)
-    if option != 'common':
-        if option is None:
-            msg = "Im sorry, but I need the symbol for the stock you are looking for, please try again. " \
-                  "If you think I made a mistake, please contact <@!610469915442282526>  to resolve this issue"
-            await ctx.channel.send(f'{msg}')
+async def load_stock(ctx, *, arg=None):
 
-        elif stocks == 'description':
-            description = robin.stocks.get_fundamentals(option, 'description')
-            await ctx.channel.send(description[0])
+    option = arg
+    stocks = None
+    everything = None
+    if arg is None:
+        msg = "Im sorry, but I need the symbol for the stock you are looking for, please try again. " \
+              "If you think I made a mistake, please contact <@!610469915442282526>  to resolve this issue"
+        await ctx.channel.send(f'{msg}')
+    else:
+        option_str = arg.split()
+        print(len(option_str))
+        if len(option_str) == 1:
+            option = option_str[0]
+
+        elif len(option_str) == 2:
+            option = option_str[0]
+            stocks = option_str[1]
         else:
-            stock_info = robin.stocks.get_latest_price(option)
-            pb_ratio = robin.stocks.get_fundamentals(option, 'pb_ratio')
-            pe_ratio = robin.stocks.get_fundamentals(option, 'pe_ratio')
-            dividend_yield = robin.stocks.get_fundamentals(option, 'dividend_yield')
-            if stock_info[0] is None:
-                msg = "Im sorry, but the stock you are looking for is not in the archives. " \
-                      "If you think I made a mistake, please contact <@!610469915442282526> to resolve this issue"
-                await ctx.channel.send(f'{msg}')
+            option = option_str[0]
+            stocks = option_str[1]
+            everything = option_str[3]
+
+        await discord.channel.TextChannel.trigger_typing(self=ctx)
+        if option != 'common':
+            if stocks == 'description':
+                description = robin.stocks.get_fundamentals(option, 'description')
+                await ctx.channel.send(description[0])
             else:
-                stock_info_number = stock_info[0]
-                msg = 'Price = $' + str(stock_info_number) + '\nP/B Ratio = ' + str(pb_ratio[0]) + '\nP/E Ratio = ' + \
-                      str(pe_ratio[0]) + '\nDividend Yield = ' + str(dividend_yield[0])
+                stock_info = robin.stocks.get_latest_price(option)
+                pb_ratio = robin.stocks.get_fundamentals(option, 'pb_ratio')
+                pe_ratio = robin.stocks.get_fundamentals(option, 'pe_ratio')
+                dividend_yield = robin.stocks.get_fundamentals(option, 'dividend_yield')
+                if stock_info[0] is None:
+                    msg = "Im sorry, but the stock you are looking for is not in the archives. " \
+                          "If you think I made a mistake, please contact <@!610469915442282526> to resolve this issue"
+                    await ctx.channel.send(f'{msg}')
+                else:
+                    stock_info_number = stock_info[0]
+                    msg = 'Price = $' + str(stock_info_number) + '\nP/B Ratio = ' + str(pb_ratio[0]) + '\nP/E Ratio = ' + \
+                          str(pe_ratio[0]) + '\nDividend Yield = ' + str(dividend_yield[0])
+                    await ctx.channel.send(f'{msg}')
+
+        if option == 'common':
+            if everything == 'everything':
+                stock_list = {}
+                with open('common-stock-list.txt', 'r') as f:
+                    array = f.readlines()
+                current_date = datetime.datetime.now()
+                d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
+                stock_list[0] = d2
+                msg = "Please wait while I compile the information you have requested, approximately 2 to 3 seconds"
                 await ctx.channel.send(f'{msg}')
+                await discord.channel.TextChannel.trigger_typing(self=ctx)
+                num = 0
+                sub = stock_list[0] + '\n'
+                while num < (len(array)):
+                    string = array[num]
+                    stock_price = robin.stocks.get_latest_price(array[num])
+                    pb_ratio = robin.stocks.get_fundamentals(array[num], 'pb_ratio')
+                    pe_ratio = robin.stocks.get_fundamentals(array[num], 'pe_ratio')
+                    dividend_yield = robin.stocks.get_fundamentals(array[num], 'dividend_yield')
+                    sub += string[0:-1] + '\nPrice = $' + str(stock_price[0]) + '\nP/B Ratio = ' + str(pb_ratio[0])
+                    sub += '\nP/E Ratio = ' + str(pe_ratio[0]) + '\nDividend Yield = ' + str(dividend_yield[0]) + '\n'
+                    num += 1
+                await ctx.channel.send(f'{sub}')
 
-    if option == 'common':
-        if everything == 'everything':
-            stock_list = {}
-            with open('common-stock-list.txt', 'r') as f:
-                array = f.readlines()
-            current_date = datetime.datetime.now()
-            d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
-            stock_list[0] = d2
-            msg = "Please wait while I compile the information you have requested, approximately 2 to 3 seconds"
-            await ctx.channel.send(f'{msg}')
-            await discord.channel.TextChannel.trigger_typing(self=ctx)
-            num = 0
-            sub = stock_list[0] + '\n'
-            while num < (len(array)):
-                string = array[num]
-                stock_price = robin.stocks.get_latest_price(array[num])
-                pb_ratio = robin.stocks.get_fundamentals(array[num], 'pb_ratio')
-                pe_ratio = robin.stocks.get_fundamentals(array[num], 'pe_ratio')
-                dividend_yield = robin.stocks.get_fundamentals(array[num], 'dividend_yield')
-                sub += string[0:-1] + '\nPrice = $' + str(stock_price[0]) + '\nP/B Ratio = ' + str(pb_ratio[0])
-                sub += '\nP/E Ratio = ' + str(pe_ratio[0]) + '\nDividend Yield = ' + str(dividend_yield[0]) + '\n'
-                num += 1
-            await ctx.channel.send(f'{sub}')
-
-        else:
-            stock_list = {}
-            with open('common-stock-list.txt', 'r') as f:
-                array = f.readlines()
-            current_date = datetime.datetime.now()
-            d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
-            stock_list[0] = d2
-            msg = "Please wait while I compile the information you have requested, approximately 2 to 3 seconds"
-            await ctx.channel.send(f'{msg}')
-            await discord.channel.TextChannel.trigger_typing(self=ctx)
-            num = 0
-            sub = stock_list[0] + '\n'
-            while num < (len(array)):
-                string = array[num]
-                stock_price = robin.stocks.get_latest_price(array[num])
-                sub += string[0:-1] + ' = $' + str(stock_price[0]) + '\n'
-                num += 1
-            await ctx.channel.send(f'{sub}')
+            else:
+                stock_list = {}
+                with open('common-stock-list.txt', 'r') as f:
+                    array = f.readlines()
+                current_date = datetime.datetime.now()
+                d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
+                stock_list[0] = d2
+                msg = "Please wait while I compile the information you have requested, approximately 2 to 3 seconds"
+                await ctx.channel.send(f'{msg}')
+                await discord.channel.TextChannel.trigger_typing(self=ctx)
+                num = 0
+                sub = stock_list[0] + '\n'
+                while num < (len(array)):
+                    string = array[num]
+                    stock_price = robin.stocks.get_latest_price(array[num])
+                    sub += string[0:-1] + ' = $' + str(stock_price[0]) + '\n'
+                    num += 1
+                await ctx.channel.send(f'{sub}')
 
 
 @bot.command(name='add', help='Adds a symbol to the common stock list')
-async def mutation(ctx, stock: str):
+async def mutation(ctx, *, arg):
     await discord.channel.TextChannel.trigger_typing(self=ctx)
-    with open("common-stock-list.txt", 'a') as f:
-        f.write(stock + '\n')
-        f.close()
-        await ctx.channel.send("Success")
+    stocks = arg.split()
+    for words in stocks:
+        with open("common-stock-list.txt", 'a') as f:
+            f.write(f'{words}\n')
+            f.close()
+    await ctx.channel.send("Success")
 
 
 @bot.command(name='hello', help='Says hello back')
