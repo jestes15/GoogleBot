@@ -157,10 +157,11 @@ async def encode(ctx, get_string: str, using: str, get_choice: str):
 
 @bot.command(name='echo', help='Echos back user input')
 async def echo(ctx, *, arg):
+    error_msg = "I'm sorry, that message is not allowed."
     with open('Banned_sayings.txt') as f:
         txt = f.read()
         if arg.lower() in txt:
-            await ctx.channel.send("I'm sorry, that message is not allowed.")
+            await ctx.channel.send(f'{error_msg}')
 """
 async def echo(ctx, *, arg):
     if 'gay' in arg.lower():
