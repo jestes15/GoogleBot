@@ -155,7 +155,6 @@ async def encode(ctx, get_string: str, using: str, get_choice: str):
     await ctx.channel.send(f'{encrypted_string}')
 
 
-
 @bot.command(name='echo', help='Echos back user input')
 async def echo(ctx, *, arg):
     with open('Banned_sayings.txt') as f:
