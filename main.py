@@ -161,8 +161,15 @@ async def echo(ctx, *, arg):
         error_msg = "I'm sorry, that message is not allowed."
         txt = f.read()
         emsg = arg.lower().split()
-        if emsg in txt:
-            await ctx.channel.send()
+        print(emsg)
+        x = 0
+        bool = False
+        while x < len(emsg):
+            if emsg in txt:
+                bool = True
+        if bool:
+            await discord.channel.TextChannel.trigger_typing(self=ctx)
+            await ctx.channel.send(f'{error_msg}')
         else:
             await discord.channel.TextChannel.trigger_typing(self=ctx)
             await ctx.channel.send(f'{arg}')
