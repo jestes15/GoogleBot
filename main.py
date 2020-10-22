@@ -12,6 +12,11 @@ from googletrans import Translator
 from wolframclient.evaluation import WolframLanguageSession
 import encryption_cmd as cmd
 
+from time import sleep
+from discord import FFmpegPCMAudio
+from discord.utils import get
+from jpype import *
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 username = os.getenv('ROBINHOOD_USERNAME')
@@ -25,6 +30,9 @@ today = date.today()
 
 session = WolframLanguageSession()
 print(session)
+
+startJVM(getDefaultJVMPath(), "-ea")
+j = java.lang
 
 
 @bot.event
@@ -353,5 +361,28 @@ async def roll(ctx, dice_type: str):
     num = int(dice_type1.replace("d", ""))
     result = r.randint(1, num)
     await ctx.channel.send(f'{result}')
+
+
+@bot.command(name='join', help='join a voice channel and plays a sound')
+async def join(ctx):
+    try:
+        channel = ctx.message.author.voice.channel
+    except AttributeError as e:
+        error_msg = 'You are not currently in a channel, therefore I can not join you.' \
+                    'Please join a channel then try again.'
+        await ctx.channel.send(f'{error_msg}')
+        await ctx.channel.send(f'{error_msg}\nError code: {e}')
+        return
+
+    voice = get(bot.voice_clients, guild=ctx.guild)
+    if voice and voice.is_connected():
+        await voice.move_to(channel)
+    else:
+        voice = await channel.connect()
+    audio_dir = 'Audio/playme.mp3'
+    source = FFmpegPCMAudio(audio_dir)
+    player = voice.play(source)
+    sleep(27)
+    await ctx.voice_client.disconnect()
 
 bot.run(TOKEN)
