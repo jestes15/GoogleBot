@@ -7,3 +7,7 @@ pip3 install google
 pip3 install robin-stocks
 pip3 install wolframclient
 pip3 install googletrans
+sudo apt install ffmpeg -y
+pip3 install ffmpeg
+pip3 install ffmpeg-python
+sudo snap install ffmpeg
