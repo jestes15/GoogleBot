@@ -11,7 +11,6 @@ from googlesearch import search
 from googletrans import Translator
 from wolframclient.evaluation import WolframLanguageSession
 import encryption_cmd as cmd
-import csv
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -160,8 +159,9 @@ async def encode(ctx, get_string: str, using: str, get_choice: str):
 async def echo(ctx, *, user_input: str):
     f = open('Banned_sayings.txt')
     txt = f.read()
-    if user_input in txt:
+    if user_input.lower() in txt:
         await ctx.channel.send("I'm sorry, that message is not allowed.")
+"""
 async def echo(ctx, *, arg):
     if 'gay' in arg.lower():
         msg = "I'm sorry, that message is not allowed."
@@ -175,7 +175,7 @@ async def echo(ctx, *, arg):
     else:
         await discord.channel.TextChannel.trigger_typing(self=ctx)
         await ctx.channel.send(f'{arg}')
-
+"""
 
 @bot.command(name='AddSaying')
 async def add_saying(ctx, *, arg):
