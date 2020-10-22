@@ -149,9 +149,19 @@ async def show(ctx, encryption: str, choices: str):
 
 
 @bot.command(name='encode', help='syntax: encode <String> using <choice of encryption>')
-async def encode(ctx, get_string: str, using: str, get_choice: str):
+async def encode(ctx, *, arg):
+    string_list = arg.split()
+    print(string_list)
+    encode_string = ''
+    for word in string_list:
+        if word.lower() != 'using':
+            encode_string += word
+        if word.lower() == 'using':
+            break
+    num = len(string_list) - 1
+    method = string_list[num]
     encode_s = cmd.EncodeString
-    encrypted_string = encode_s.switch(cmd.EncodeString(get_string), get_choice).string
+    encrypted_string = encode_s.switch(cmd.EncodeString(encode_string), method).string
     await ctx.channel.send(f'{encrypted_string}')
 
 
@@ -164,27 +174,11 @@ async def echo(ctx, *, arg):
         await ctx.channel.send(f'{error_msg}')
     elif 'fag' in arg.lower():
         await ctx.channel.send(f'{error_msg}')
+    elif 'queer' in arg.lower():
+        await ctx.channel.send(f'{error_msg}')
     else:
         await discord.channel.TextChannel.trigger_typing(self=ctx)
         await ctx.channel.send(f'{arg}')
-
-
-
-"""
-async def echo(ctx, *, arg):
-    if 'gay' in arg.lower():
-        msg = "I'm sorry, that message is not allowed."
-        await ctx.channel.send(f'{msg}')
-    elif 'homo' in arg.lower():
-        msg = "I'm sorry, that message is not allowed."
-        await ctx.channel.send(f'{msg}')
-    elif 'fag' in arg.lower():
-        msg = "I'm sorry, that message is not allowed."
-        await ctx.channel.send(f'{msg}')
-    else:
-        await discord.channel.TextChannel.trigger_typing(self=ctx)
-        await ctx.channel.send(f'{arg}')
-"""
 
 
 @bot.command(name='AddSaying')
