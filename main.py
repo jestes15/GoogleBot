@@ -11,7 +11,6 @@ from googlesearch import search
 from googletrans import Translator
 from wolframclient.evaluation import WolframLanguageSession
 import encryption_cmd as cmd
-import csv
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -174,7 +173,10 @@ async def echo(ctx, *, arg):
 
 @bot.command(name='AddSaying')
 async def add_saying(ctx, *, arg):
-    await ctx.channel.send(f'{arg}')
+    with open('Banned_sayings.txt', 'a') as BFile:
+        BFile.write(arg)
+        msg = 'The operation was completed successfully'
+        await ctx.channel.send(f'{msg}\n')
 
 
 @bot.command(name='announce', help='Allows announcement to be used')
