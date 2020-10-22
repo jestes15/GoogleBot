@@ -11,6 +11,7 @@ from googlesearch import search
 from googletrans import Translator
 from wolframclient.evaluation import WolframLanguageSession
 import encryption_cmd as cmd
+import csv
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -171,6 +172,11 @@ async def echo(ctx, user_input: str):
         await ctx.channel.send(f'{user_input}')
 
 
+@bot.command(name='AddSaying')
+async def add_saying(ctx, *, arg):
+    await ctx.channel.send(f'{arg}')
+
+
 @bot.command(name='announce', help='Allows announcement to be used')
 async def ann(ctx, user_input: str, channel_id: int, delete=False):
     await ctx.channel.send("Request received: executing now")
@@ -293,7 +299,7 @@ async def mathematica(ctx, function: str):
 
 
 @bot.command(name='translate', help='Translates a string to another language')
-async def translate(ctx, user_input: str, to: str, trans_lang: str):
+async def translate(ctx, user_input: str, *, trans_lang: str):
     translator = Translator()
     list_lang = googletrans.LANGCODES
     translations = translator.translate([user_input], dest=list_lang[trans_lang])
