@@ -155,6 +155,7 @@ async def encode(ctx, get_string: str, using: str, get_choice: str):
     await ctx.channel.send(f'{encrypted_string}')
 
 
+
 @bot.command(name='echo', help='Echos back user input')
 async def echo(ctx, *, user_input: str):
     f = open('Banned_sayings.txt')
@@ -176,6 +177,7 @@ async def echo(ctx, *, arg):
         await discord.channel.TextChannel.trigger_typing(self=ctx)
         await ctx.channel.send(f'{arg}')
 """
+
 
 @bot.command(name='AddSaying')
 async def add_saying(ctx, *, arg):
