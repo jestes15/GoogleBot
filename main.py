@@ -162,7 +162,7 @@ async def echo(ctx, *, arg):
         txt = f.read()
         emsg = arg.lower().split()
         if emsg in txt:
-            await ctx.channel.send()
+            await ctx.channel.send(error_msg)
         else:
             await discord.channel.TextChannel.trigger_typing(self=ctx)
             await ctx.channel.send(f'{arg}')
