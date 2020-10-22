@@ -157,22 +157,16 @@ async def encode(ctx, get_string: str, using: str, get_choice: str):
 
 @bot.command(name='echo', help='Echos back user input')
 async def echo(ctx, *, arg):
-    with open('Banned_sayings.txt') as f:
-        error_msg = "I'm sorry, that message is not allowed."
-        txt = f.read()
-        emsg = arg.lower().split()
-        print(emsg)
-        x = 0
-        bool = False
-        while x < len(emsg):
-            if emsg in txt:
-                bool = True
-        if bool:
-            await discord.channel.TextChannel.trigger_typing(self=ctx)
-            await ctx.channel.send(f'{error_msg}')
-        else:
-            await discord.channel.TextChannel.trigger_typing(self=ctx)
-            await ctx.channel.send(f'{arg}')
+    error_msg = "I'm sorry, that message is not allowed."
+    if 'gay' in arg.lower():
+        await ctx.channel.send(f'{error_msg}')
+    elif 'homo' in arg.lower():
+        await ctx.channel.send(f'{error_msg}')
+    elif 'fag' in arg.lower():
+        await ctx.channel.send(f'{error_msg}')
+    else:
+        await discord.channel.TextChannel.trigger_typing(self=ctx)
+        await ctx.channel.send(f'{arg}')
 
 
 
