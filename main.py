@@ -134,7 +134,7 @@ async def on_message(message):
 
 
 @bot.command(name='list', help='"encryption options"')
-async def show(ctx, encryption: str, choices: str):
+async def show(ctx, *, arg):
     await discord.channel.TextChannel.trigger_typing(self=ctx)
     choices = 'base84\n' \
               'base64\n' \
@@ -151,7 +151,6 @@ async def show(ctx, encryption: str, choices: str):
 @bot.command(name='encode', help='syntax: encode <String> using <choice of encryption>')
 async def encode(ctx, *, arg):
     string_list = arg.split()
-    print(string_list)
     encode_string = ''
     for word in string_list:
         if word.lower() != 'using':
