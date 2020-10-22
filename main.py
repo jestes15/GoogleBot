@@ -15,7 +15,6 @@ import encryption_cmd as cmd
 from time import sleep
 from discord import FFmpegPCMAudio
 from discord.utils import get
-from jpype import *
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -30,9 +29,6 @@ today = date.today()
 
 session = WolframLanguageSession()
 print(session)
-
-startJVM(getDefaultJVMPath(), "-ea")
-j = java.lang
 
 
 @bot.event
