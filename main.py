@@ -36,9 +36,6 @@ async def on_ready():
     # Sends an online message to the aforementioned channel
 
 
-'async def load_stock(ctx, option=None, stocks=None, str3=None, everything=None):'
-
-
 @bot.command(name='get', help='Takes stock symbol, returns price')
 async def load_stock(ctx, *, arg=None):
 
@@ -79,8 +76,8 @@ async def load_stock(ctx, *, arg=None):
                     await ctx.channel.send(f'{msg}')
                 else:
                     stock_info_number = stock_info[0]
-                    msg = 'Price = $' + str(stock_info_number) + '\nP/B Ratio = ' + str(pb_ratio[0]) + '\nP/E Ratio = ' + \
-                          str(pe_ratio[0]) + '\nDividend Yield = ' + str(dividend_yield[0])
+                    msg = 'Price = $' + str(stock_info_number) + '\nP/B Ratio = ' + str(pb_ratio[0]) + '\nP/E Ratio = '\
+                          + str(pe_ratio[0]) + '\nDividend Yield = ' + str(dividend_yield[0])
                     await ctx.channel.send(f'{msg}')
 
         if option == 'common':
@@ -221,26 +218,30 @@ async def ann(ctx, user_input: str, channel_id: int, delete=False):
     # Echos user input
 
 
-@bot.command(name='give', help='syntax: give me quotes. Sends a random meme statement')
-async def meme(ctx, me: str, quotes: str):
-    await discord.channel.TextChannel.trigger_typing(self=ctx)
-    meme_dictionary = {
-        1: 'Hello There',
-        2: '*Nani*',
-        3: 'Boi if you don\'t get that out of here',
-        4: '*China*'
-    }
-    x = int(r.randint(1, 4))
-    await ctx.channel.send(f'{meme_dictionary[x]}')
-
 audio_dict = {
     1: 'playme.mp3',
     2: 'PlayMe2.mp3'
 }
+meme_dictionary = {
+    1: 'Hello There',
+    2: '*Nani*',
+    3: 'Boi if you don\'t get that out of here',
+    4: '*China*'
+}
 
 
 @bot.command(name='send', help='syntax: send me memes. Shows an image')
-async def image(ctx, me: str, memes: str, type_f=None, choice=None):
+async def image(ctx, *, arg):
+    command = arg.split()
+    type_f = None
+    choice = None
+    print(command)
+    if len(command) == 3:
+        type_f = command[2]
+    if len(command) == 4:
+        type_f = command[2]
+        choice = command[3]
+    print(type_f)
     d1 = today.strftime("%m/%d/%Y")  # Gets current date
     await discord.channel.TextChannel.trigger_typing(self=ctx)
     if d1 == "09/11/2001":
@@ -253,7 +254,7 @@ async def image(ctx, me: str, memes: str, type_f=None, choice=None):
         await ctx.channel.send(file=discord.File('Images/image1.jpg'))
         await discord.channel.TextChannel.trigger_typing(self=ctx)
         await ctx.channel.send(file=discord.File('Images/image.jpg'))
-    if type_f is not None:
+    elif type_f is not None:
         if type_f == 'mp3':
             file = audio_dict[int(choice)]
             await ctx.channel.send(file=discord.File(f'Audio/{file}'))
