@@ -312,7 +312,7 @@ async def date(ctx, is2: str, the: str, object2: str):
 
 
 @bot.command(name='google', help='Googles the term specified (place in quotes)')
-async def google(ctx, query: str):
+async def google(ctx, *, query: str):
     await discord.channel.TextChannel.trigger_typing(self=ctx)
     wait_message = "Please wait while I gather the top ten search results."
     await discord.channel.TextChannel.trigger_typing(self=ctx)
@@ -377,7 +377,7 @@ async def join(ctx):
         voice = await channel.connect()
     audio_dir = 'Audio/playme.mp3'
     source = FFmpegPCMAudio(audio_dir)
-    player = voice.play(source)
+    voice.play(source)
     sleep(27)
     await ctx.voice_client.disconnect()
 
