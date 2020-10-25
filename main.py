@@ -26,24 +26,22 @@ robin.authentication.login(username, password)
 bot = commands.Bot(command_prefix="Hey Google, ")
 
 today = date.today()
-
 session = WolframLanguageSession()
-print(session)
 
 
 @bot.event
 async def on_ready():
-    print(f'{bot.user.name} has connected to Discord')  # Sends an online message to the command line
     channel = bot.get_channel(756568695320608910)  # Gets the channel with this channel id
+    print(f'{bot.user.name} has connected to Discord')  # Sends an online message to the command line
     await bot.change_presence(activity=discord.Game(name="search and record"))
     await channel.send(f'{bot.user.name} has connected to discord')
     # Sends an online message to the aforementioned channel
+    msg = 'WolframLanguageSession initialized'
+    await channel.send(f'{msg}\n{session}')
 
 
 @bot.command(name='get', help='Takes stock symbol, returns price')
 async def load_stock(ctx, *, arg=None):
-
-    option = arg
     stocks = None
     everything = None
     if arg is None:
@@ -52,7 +50,6 @@ async def load_stock(ctx, *, arg=None):
         await ctx.channel.send(f'{msg}')
     else:
         option_str = arg.split()
-        print(len(option_str))
         if len(option_str) == 1:
             option = option_str[0]
 
