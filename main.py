@@ -1,3 +1,15 @@
+"""
+This is a Discord Bot created by Joshua Estes and Logan Gordy.
+Use of this bot must comply with Discord ToS and other government regulations.
+Release Date: October 27, 2020
+
+Disclaimer:
+Me or my fellow associates are not liable for any mishandling of the
+bot by any other foreign entities, sole responsibility will be on the user of said
+program.
+"""
+
+
 import datetime
 import os
 import random as r
@@ -30,6 +42,8 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
+version_num = '1.0.0'
+
 
 @bot.event
 async def on_ready():
@@ -40,6 +54,16 @@ async def on_ready():
     # Sends an online message to the aforementioned channel
     msg = 'WolframLanguageSession initialized'
     await channel.send(f'{msg}')
+
+
+@bot.command(name='describe', help='Describes itself or a command.')
+async def describe(ctx, *, arg):
+    if arg == 'yourself':
+        description_msg = f'I am a Discord bot created by Joshua Estes and Logan Gordy in an ' \
+                          f'effort to make a boy that can do an assortment of different task determine ' \
+                          f'by the users. I am currently on version {version_num}. Try "Hey Google, help" to ' \
+                          f'get started.'
+        await ctx.channel.send(description_msg)
 
 
 @bot.command(name='get', help='Takes stock symbol, returns price')
