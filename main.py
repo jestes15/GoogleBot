@@ -42,7 +42,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '1.0.0'
+version_num = '1.0.1'
 
 
 @bot.event
@@ -60,7 +60,7 @@ async def on_ready():
 async def describe(ctx, *, arg):
     if arg == 'yourself':
         description_msg = f'I am a Discord bot created by Joshua Estes and Logan Gordy in an ' \
-                          f'effort to make a boy that can do an assortment of different task determine ' \
+                          f'effort to make a bot that can do an assortment of different task determine ' \
                           f'by the users. I am currently on version {version_num}. Try "Hey Google, help" to ' \
                           f'get started.'
         await ctx.channel.send(description_msg)
