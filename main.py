@@ -42,7 +42,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '1.1.0'
+version_num = '1.2.0'
 
 
 @bot.event
@@ -432,5 +432,14 @@ async def join(ctx):
     voice.play(source)
     sleep(27)
     await ctx.voice_client.disconnect()
+
+
+@bot.command(name='leave')
+async def leave_guild(ctx):
+    if ctx.author.id == 610469915442282526:
+        await discord.guild.Guild.leave(ctx.guild)
+    else:
+        msg = "You are not allowed to use this function"
+        await ctx.channel.send(msg)
 
 bot.run(TOKEN)
