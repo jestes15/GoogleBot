@@ -39,7 +39,7 @@ async def on_ready():
     await channel.send(f'{bot.user.name} has connected to discord')
     # Sends an online message to the aforementioned channel
     msg = 'WolframLanguageSession initialized'
-    await channel.send(f'{msg}\n{session}')
+    await channel.send(f'{msg}')
 
 
 @bot.command(name='get', help='Takes stock symbol, returns price')
