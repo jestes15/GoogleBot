@@ -28,6 +28,8 @@ bot = commands.Bot(command_prefix="Hey Google, ")
 today = date.today()
 session = WolframLanguageSession()
 
+Discord_ID = '<@!610469915442282526> or DarthBane#8863'
+
 
 @bot.event
 async def on_ready():
@@ -44,6 +46,7 @@ async def on_ready():
 async def load_stock(ctx, *, arg=None):
     stocks = None
     everything = None
+    crypto_modifier = None
     if arg is None:
         msg = "Im sorry, but I need the symbol for the stock you are looking for, please try again. " \
               "If you think I made a mistake, please contact <@!610469915442282526>  to resolve this issue"
@@ -56,30 +59,18 @@ async def load_stock(ctx, *, arg=None):
         elif len(option_str) == 2:
             option = option_str[0]
             stocks = option_str[1]
+
+        elif len(option_str) == 3:
+            option = option_str[0]
+            stocks = option_str[1]
+            crypto_modifier = option_str[2]
+
         else:
             option = option_str[0]
             stocks = option_str[1]
             everything = option_str[3]
 
         await discord.channel.TextChannel.trigger_typing(self=ctx)
-        if option != 'common':
-            if stocks == 'description':
-                description = robin.stocks.get_fundamentals(option, 'description')
-                await ctx.channel.send(description[0])
-            else:
-                stock_info = robin.stocks.get_latest_price(option)
-                pb_ratio = robin.stocks.get_fundamentals(option, 'pb_ratio')
-                pe_ratio = robin.stocks.get_fundamentals(option, 'pe_ratio')
-                dividend_yield = robin.stocks.get_fundamentals(option, 'dividend_yield')
-                if stock_info[0] is None:
-                    msg = "Im sorry, but the stock you are looking for is not in the archives. " \
-                          "If you think I made a mistake, please contact <@!610469915442282526> to resolve this issue"
-                    await ctx.channel.send(f'{msg}')
-                else:
-                    stock_info_number = stock_info[0]
-                    msg = 'Price = $' + str(stock_info_number) + '\nP/B Ratio = ' + str(pb_ratio[0]) + '\nP/E Ratio = '\
-                          + str(pe_ratio[0]) + '\nDividend Yield = ' + str(dividend_yield[0])
-                    await ctx.channel.send(f'{msg}')
 
         if option == 'common':
             if everything == 'everything':
@@ -104,7 +95,6 @@ async def load_stock(ctx, *, arg=None):
                     sub += '\nP/E Ratio = ' + str(pe_ratio[0]) + '\nDividend Yield = ' + str(dividend_yield[0]) + '\n'
                     num += 1
                 await ctx.channel.send(f'{sub}')
-
             else:
                 stock_list = {}
                 with open('common-stock-list.txt', 'r') as f:
@@ -123,6 +113,47 @@ async def load_stock(ctx, *, arg=None):
                     sub += string[0:-1] + ' = $' + str(stock_price[0]) + '\n'
                     num += 1
                 await ctx.channel.send(f'{sub}')
+
+        elif option == 'crypto':
+            if crypto_modifier is None:
+                crypto_value = robin.crypto.get_crypto_quote(stocks, 'mark_price')
+                if crypto_value is None:
+                    error_msg = 'I\'m sorry, but the stock you are looking for is not here, make sure you ' \
+                                'are using the correct Id and try again. If you can not figure it out, contact ' \
+                                f'the dev of this bot, {Discord_ID}'
+                    await ctx.channel.send(error_msg)
+                else:
+                    current_price = f'The current price of {stocks} is ${crypto_value}'
+                    await ctx.channel.send(current_price)
+            else:
+                crypto_value = robin.crypto.get_crypto_quote(stocks, crypto_modifier)
+                if crypto_value is None:
+                    error_msg = 'I\'m sorry, but the stock you are looking for is not here, make sure you ' \
+                                'are using the correct Id and try again. If you can not figure it out, contact ' \
+                                f'the dev of this bot, {Discord_ID}'
+                    await ctx.channel.send(error_msg)
+                else:
+                    current_price = f'The {crypto_modifier} of {stocks} is {crypto_value}'
+                    await ctx.channel.send(current_price)
+
+        else:
+            if stocks == 'description':
+                description = robin.stocks.get_fundamentals(option, 'description')
+                await ctx.channel.send(description[0])
+            else:
+                stock_info = robin.stocks.get_latest_price(option)
+                pb_ratio = robin.stocks.get_fundamentals(option, 'pb_ratio')
+                pe_ratio = robin.stocks.get_fundamentals(option, 'pe_ratio')
+                dividend_yield = robin.stocks.get_fundamentals(option, 'dividend_yield')
+                if stock_info[0] is None:
+                    msg = "Im sorry, but the stock you are looking for is not in the archives. " \
+                          "If you think I made a mistake, please contact <@!610469915442282526> to resolve this issue"
+                    await ctx.channel.send(f'{msg}')
+                else:
+                    stock_info_number = stock_info[0]
+                    msg = 'Price = $' + str(stock_info_number) + '\nP/B Ratio = ' + str(pb_ratio[0]) + \
+                          '\nP/E Ratio = ' + str(pe_ratio[0]) + '\nDividend Yield = ' + str(dividend_yield[0])
+                    await ctx.channel.send(f'{msg}')
 
 
 @bot.command(name='add', help='Adds a symbol to the common stock list')
