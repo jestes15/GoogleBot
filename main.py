@@ -42,7 +42,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '1.0.1'
+version_num = '1.1.0'
 
 
 @bot.event
