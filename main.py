@@ -44,7 +44,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '2.1.0'
+version_num = '2.2.0'
 
 
 @bot.event
@@ -179,8 +179,8 @@ async def load_stock(ctx, *, arg=None):
                 pe_ratio = robin.stocks.get_fundamentals(option, 'pe_ratio')
                 dividend_yield = robin.stocks.get_fundamentals(option, 'dividend_yield')
                 if stock_info[0] is None:
-                    msg = "Im sorry, but the stock you are looking for is not in the archives. " \
-                          "If you think I made a mistake, please contact <@!610469915442282526> to resolve this issue"
+                    msg = f"Im sorry, but the stock you are looking for is not in the archives. " \
+                          f"If you think I made a mistake, please contact {Discord_ID} to resolve this issue"
                     await ctx.channel.send(f'{msg}')
                 else:
                     stock_info_number = stock_info[0]
@@ -188,8 +188,11 @@ async def load_stock(ctx, *, arg=None):
                           f'Dividend Yield = {dividend_yield[0]}'
                     embed_var = discord.Embed(title=f'{option}', description=msg, color=0x00ff00)
                     url = si.load_stock_img(option)
-                    embed_var.set_thumbnail(url=url)
-                    await ctx.channel.send(embed=embed_var)
+                    if url is None:
+                        await ctx.channel.send(embed=embed_var)
+                    else:
+                        embed_var.set_thumbnail(url=url)
+                        await ctx.channel.send(embed=embed_var)
 
 
 @bot.command(name='add', help='Adds a symbol to the common stock list')
