@@ -23,6 +23,7 @@ from googlesearch import search
 from googletrans import Translator
 from wolframclient.evaluation import WolframLanguageSession
 import encryption_cmd as cmd
+import stock_images as si
 
 from time import sleep
 from discord import FFmpegPCMAudio
@@ -42,7 +43,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '1.2.0'
+version_num = '2.0.0'
 
 
 @bot.event
@@ -63,7 +64,9 @@ async def describe(ctx, *, arg):
                           f'effort to make a bot that can do an assortment of different task determine ' \
                           f'by the users. I am currently on version {version_num}. Try "Hey Google, help" to ' \
                           f'get started.'
-        await ctx.channel.send(description_msg)
+        embed_var = discord.Embed(title='Who am I?', description=description_msg, color=0x00ff00)
+        embed_var.set_thumbnail(url='https://th.bing.com/th/id/OIP.7ZvVP00p4WDHmErvpPw88gHaHa?pid=Api&rs=1')
+        await ctx.channel.send(embed=embed_var)
 
 
 @bot.command(name='get', help='Takes stock symbol, returns price')
@@ -115,10 +118,10 @@ async def load_stock(ctx, *, arg=None):
                     pb_ratio = robin.stocks.get_fundamentals(array[num], 'pb_ratio')
                     pe_ratio = robin.stocks.get_fundamentals(array[num], 'pe_ratio')
                     dividend_yield = robin.stocks.get_fundamentals(array[num], 'dividend_yield')
-                    sub += string[0:-1] + '\nPrice = $' + str(stock_price[0]) + '\nP/B Ratio = ' + str(pb_ratio[0])
-                    sub += '\nP/E Ratio = ' + str(pe_ratio[0]) + '\nDividend Yield = ' + str(dividend_yield[0]) + '\n'
+                    sub += f'{string[0:-1]}\nPrice = ${stock_price[0]}\nP/B Ratio = {pb_ratio[0]}\nP/E Ratio = {pe_ratio[0]}\nDividend Yield = {dividend_yield[0]}\n\n'
                     num += 1
-                await ctx.channel.send(f'{sub}')
+                embed_var = discord.Embed(title='Common Stocks', description=sub, color=0xff0000)
+                await ctx.channel.send(embed=embed_var)
             else:
                 stock_list = {}
                 with open('common-stock-list.txt', 'r') as f:
@@ -134,9 +137,10 @@ async def load_stock(ctx, *, arg=None):
                 while num < (len(array)):
                     string = array[num]
                     stock_price = robin.stocks.get_latest_price(array[num])
-                    sub += string[0:-1] + ' = $' + str(stock_price[0]) + '\n'
+                    sub += f'{string[0:-1]} = ${str(stock_price[0])}\n'
                     num += 1
-                await ctx.channel.send(f'{sub}')
+                embed_var = discord.Embed(title='Common Stocks', description=sub, color=0xff0000)
+                await ctx.channel.send(embed=embed_var)
 
         elif option == 'crypto':
             if crypto_modifier is None:
@@ -148,7 +152,9 @@ async def load_stock(ctx, *, arg=None):
                     await ctx.channel.send(error_msg)
                 else:
                     current_price = f'The current price of {stocks} is ${crypto_value}'
-                    await ctx.channel.send(current_price)
+                    embed_var = discord.Embed(title=f'{"Cryptocurrency"}', description=current_price, color=0x00b300)
+                    embed_var.set_thumbnail(url='https://th.bing.com/th/id/OIP.Y25UPylA8mnk-SfKSnEEGQHaFb?pid=Api&rs=1')
+                    await ctx.channel.send(embed=embed_var)
             else:
                 crypto_value = robin.crypto.get_crypto_quote(stocks, crypto_modifier)
                 if crypto_value is None:
@@ -158,7 +164,9 @@ async def load_stock(ctx, *, arg=None):
                     await ctx.channel.send(error_msg)
                 else:
                     current_price = f'The {crypto_modifier} of {stocks} is {crypto_value}'
-                    await ctx.channel.send(current_price)
+                    embed_var = discord.Embed(title=f'{"Cryptocurrency"}', description=current_price, color=0x00b300)
+                    embed_var.set_thumbnail(url='https://th.bing.com/th/id/OIP.Y25UPylA8mnk-SfKSnEEGQHaFb?pid=Api&rs=1')
+                    await ctx.channel.send(embed=embed_var)
 
         else:
             if stocks == 'description':
@@ -175,9 +183,12 @@ async def load_stock(ctx, *, arg=None):
                     await ctx.channel.send(f'{msg}')
                 else:
                     stock_info_number = stock_info[0]
-                    msg = 'Price = $' + str(stock_info_number) + '\nP/B Ratio = ' + str(pb_ratio[0]) + \
-                          '\nP/E Ratio = ' + str(pe_ratio[0]) + '\nDividend Yield = ' + str(dividend_yield[0])
-                    await ctx.channel.send(f'{msg}')
+                    msg = f'Price = ${stock_info_number}\nP/B Ratio = {pb_ratio[0]}\nP/E Ratio = {pe_ratio[0]}\n' \
+                          f'Dividend Yield = {dividend_yield[0]}'
+                    embed_var = discord.Embed(title=f'{option}', description=msg, color=0x00ff00)
+                    url = si.load_stock_img(option)
+                    embed_var.set_thumbnail(url=url)
+                    await ctx.channel.send(embed=embed_var)
 
 
 @bot.command(name='add', help='Adds a symbol to the common stock list')
@@ -329,21 +340,25 @@ async def GetBibleVerse(ctx, for2: str, book_name: str, chapter: int, verse: int
         bible_read = bible.readlines()
 
         if last_verse == 0:
+            range_verse = f'{book_name} {chapter}:{verse}'
             verse_line = 2 * (verse - 1)
             msg = bible_read[verse_line]
-            await ctx.channel.send(f'{msg}')
+            embed_var = discord.Embed(title=range_verse, description=msg, color=0xffff00)
+            await ctx.channel.send(embed=embed_var)
 
         else:
             i = verse
             i_i = last_verse + 1
             bible_verse = ''
+            range_verse = f'{book_name} {chapter}:{verse}-{last_verse}'
             while i < i_i:
                 verse_line = 2 * (i - 1)
                 bible_verse += bible_read[verse_line] + '\n'
                 i += 1
             length = len(bible_verse)
             if length < 2001:
-                await ctx.channel.send(f'{bible_verse}')
+                embed_var = discord.Embed(title=range_verse, description=bible_verse, color=0xffb300)
+                await ctx.channel.send(embed=embed_var)
             else:
                 msg = "Error: You have requested too many Bible verses " \
                       "and have exceeded the discord limit of 2000 characters " \
@@ -389,7 +404,7 @@ async def mathematica(ctx, function: str):
 
 
 @bot.command(name='translate', help='Translates a string to another language')
-async def translate(ctx, user_input: str, *, trans_lang: str):
+async def translate(ctx, user_input: str, trans_lang: str):
     translator = Translator()
     list_lang = googletrans.LANGCODES
     translations = translator.translate([user_input], dest=list_lang[trans_lang])
@@ -400,7 +415,8 @@ async def translate(ctx, user_input: str, *, trans_lang: str):
         if len(msg) > 2000:
             await ctx.channel.send(f'{error_msg}')
         else:
-            await ctx.channel.send(f'{msg}')
+            embed_var = discord.Embed(title=f'Translation to {trans_lang}', description=msg, color=0x00ff00)
+            await ctx.channel.send(embed=embed_var)
 
 
 @bot.command(name='roll', help='Rolls a dice')
