@@ -28,6 +28,7 @@ import stock_images as si
 from time import sleep
 from discord import FFmpegPCMAudio
 from discord.utils import get
+from pretty_help import PrettyHelp
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -36,14 +37,14 @@ password = os.getenv('ROBINHOOD_PASSWORD')
 
 robin.authentication.login(username, password)
 
-bot = commands.Bot(command_prefix="Hey Google, ")
+bot = commands.Bot(command_prefix="Hey Google, ", help_command=PrettyHelp())
 
 today = date.today()
 session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '2.0.0'
+version_num = '2.1.0'
 
 
 @bot.event
