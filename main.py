@@ -44,7 +44,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '2.2.0'
+version_num = '2.2.1'
 
 
 @bot.event
@@ -119,7 +119,8 @@ async def load_stock(ctx, *, arg=None):
                     pb_ratio = robin.stocks.get_fundamentals(array[num], 'pb_ratio')
                     pe_ratio = robin.stocks.get_fundamentals(array[num], 'pe_ratio')
                     dividend_yield = robin.stocks.get_fundamentals(array[num], 'dividend_yield')
-                    sub += f'{string[0:-1]}\nPrice = ${stock_price[0]}\nP/B Ratio = {pb_ratio[0]}\nP/E Ratio = {pe_ratio[0]}\nDividend Yield = {dividend_yield[0]}\n\n'
+                    sub += f'{string[0:-1]}\nPrice = ${stock_price[0]}\nP/B Ratio = {pb_ratio[0]}\nP/E Ratio = ' \
+                           f'{pe_ratio[0]}\nDividend Yield = {dividend_yield[0]}\n\n'
                     num += 1
                 embed_var = discord.Embed(title='Common Stocks', description=sub, color=0xff0000)
                 await ctx.channel.send(embed=embed_var)
@@ -327,7 +328,11 @@ async def image(ctx, *, arg):
         await ctx.channel.send(file=discord.File('Images/image.jpg'))
     elif type_f is not None:
         if type_f == 'mp3':
-            file = audio_dict[int(choice)]
+            try:
+                file = audio_dict[int(choice)]
+            except TypeError as e:
+                rand_int = r.randint(1, 2)
+                file = audio_dict[rand_int]
             await ctx.channel.send(file=discord.File(f'Audio/{file}'))
         if type_f == 'gif':
             await ctx.channel.send(file=discord.File('GIF/258c8822b6a11bdc8d0060bd9bb47df3.gif'))
