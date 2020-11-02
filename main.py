@@ -24,6 +24,7 @@ from googletrans import Translator
 from wolframclient.evaluation import WolframLanguageSession
 import encryption_cmd as cmd
 import stock_images as si
+import googletranslang
 
 from time import sleep
 from discord import FFmpegPCMAudio
@@ -44,7 +45,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '2.3.0'
+version_num = '2.4.0'
 
 
 @bot.event
@@ -395,7 +396,7 @@ async def google(ctx, *, query: str):
     await discord.channel.TextChannel.trigger_typing(self=ctx)
     await ctx.channel.send(wait_message)
     results = ''
-    for j in search(query, tld="co.in", lang='en', num=10, stop=10, pause=2):
+    for j in search(query, tld="co.in", stop=10, pause=2):
         results += "<" + j + ">\n"
 
     await ctx.channel.send(f'{results}')
@@ -414,19 +415,25 @@ async def mathematica(ctx, function: str):
 
 
 @bot.command(name='translate', help='Translates a string to another language')
-async def translate(ctx, user_input: str, trans_lang: str):
-    translator = Translator()
-    list_lang = googletrans.LANGCODES
-    translations = translator.translate([user_input], dest=list_lang[trans_lang])
-    for translation in translations:
-        msg = translation.origin + ' ----> ' + translation.text
-        error_msg = 'The section of text you want to translate makes the message over 2000 characters, '\
-                    'please shorten it'
-        if len(msg) > 2000:
-            await ctx.channel.send(f'{error_msg}')
-        else:
-            embed_var = discord.Embed(title=f'Translation to {trans_lang}', description=msg, color=0x00ff00)
-            await ctx.channel.send(embed=embed_var)
+async def translate(ctx, user_input: str, trans_lang=None):
+    await discord.channel.TextChannel.trigger_typing(self=ctx)
+    if user_input == 'list':
+        msg = googletranslang.discord_msg()
+        embed = discord.Embed(title='List of all languages', description=msg, color=0xff0000)
+        await ctx.channel.send(embed=embed)
+    else:
+        translator = Translator()
+        list_lang = googletrans.LANGCODES
+        translations = translator.translate([user_input], dest=list_lang[trans_lang])
+        for translation in translations:
+            msg = translation.origin + ' ----> ' + translation.text
+            error_msg = 'The section of text you want to translate makes the message over 2000 characters, '\
+                        'please shorten it'
+            if len(msg) > 2000:
+                await ctx.channel.send(f'{error_msg}')
+            else:
+                embed_var = discord.Embed(title=f'Translation to {trans_lang}', description=msg, color=0x00ff00)
+                await ctx.channel.send(embed=embed_var)
 
 
 @bot.command(name='roll', help='Rolls a dice')
