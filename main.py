@@ -25,6 +25,7 @@ from wolframclient.evaluation import WolframLanguageSession
 import encryption_cmd as cmd
 import stock_images as si
 import googletranslang
+import stocks
 
 from time import sleep
 from discord import FFmpegPCMAudio
@@ -45,7 +46,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '2.5.1'
+version_num = '2.5.2'
 
 
 @bot.event
@@ -100,8 +101,6 @@ async def load_stock(ctx, *, arg=None):
             everything = option_str[3]
 
         await discord.channel.TextChannel.trigger_typing(self=ctx)
-
-        stocks(option, stocks, crypto_modifier, everything)
 
         if option == 'common':
             if everything == 'everything':
@@ -497,4 +496,39 @@ async def resources(ctx):
     embed_var.set_thumbnail(url='https://static.politico.com/e6/1e/75bc724948dbb9d6473a7a139d32/19725-donald-trump-gty-'
                                 '773.jpg')
     await ctx.channel.send(embed=embed_var)
+
+
+@bot.command(name='test')
+async def test(ctx, *, arg):
+    option = None
+    stocks_n = None
+    everything = None
+    crypto_modifier = None
+    if arg is None:
+        msg = "Im sorry, but I need the symbol for the stock you are looking for, please try again. " \
+              "If you think I made a mistake, please contact <@!610469915442282526>  to resolve this issue"
+        await ctx.channel.send(f'{msg}')
+    else:
+        option_str = arg.split()
+        if len(option_str) == 1:
+            option = option_str[0]
+
+        elif len(option_str) == 2:
+            option = option_str[0]
+            stocks_n = option_str[1]
+
+        elif len(option_str) == 3:
+            option = option_str[0]
+            stocks_n = option_str[1]
+            crypto_modifier = option_str[2]
+
+        else:
+            option = option_str[0]
+            stocks_n = option_str[1]
+            everything = option_str[3]
+
+    print(f'{option} {stocks_n} {crypto_modifier} {everything}')
+    msg = stocks.LoadStock(option).common()
+    await ctx.channel.send(msg)
+
 bot.run(TOKEN)
