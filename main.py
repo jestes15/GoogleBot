@@ -45,7 +45,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '2.4.0'
+version_num = '2.5.1'
 
 
 @bot.event
@@ -100,6 +100,8 @@ async def load_stock(ctx, *, arg=None):
             everything = option_str[3]
 
         await discord.channel.TextChannel.trigger_typing(self=ctx)
+
+        stocks(option, stocks, crypto_modifier, everything)
 
         if option == 'common':
             if everything == 'everything':
@@ -170,7 +172,6 @@ async def load_stock(ctx, *, arg=None):
                     embed_var = discord.Embed(title=f'{"Cryptocurrency"}', description=current_price, color=0x00b300)
                     embed_var.set_thumbnail(url='https://th.bing.com/th/id/OIP.Y25UPylA8mnk-SfKSnEEGQHaFb?pid=Api&rs=1')
                     await ctx.channel.send(embed=embed_var)
-
         else:
             if stocks == 'description':
                 description = robin.stocks.get_fundamentals(option, 'description')
@@ -475,4 +476,25 @@ async def leave_guild(ctx):
         msg = "You are not allowed to use this function"
         await ctx.channel.send(msg)
 
+
+@bot.command(name='sources')
+async def resources(ctx):
+    msg = 'TCJA [Fox](https://www.foxbusiness.com/economy/trump-tax-cuts-and-the-middle-class-here-are-the-facts)\n' \
+          '[IRS](https://www.irs.gov/newsroom/tax-cuts-and-jobs-act-a-comparison-for-businesses)\n' \
+          '[US Treasury](https://home.treasury.gov/policy-issues/top-priorities/tax-cuts-and-jobs-ac' \
+          't/tax-cuts-for-the-american-family)\n' \
+          '[UST2](https://home.treasury.gov/policy-issues/top-priorities/tax-cuts-and-jobs-act/more-jobs' \
+          '-and-bigger-paychecks)\n' \
+          '[UST3](https://home.treasury.gov/policy-issues/top-priorities/tax-cuts-and-jobs-act/fairness' \
+          '-and-opportunity-for-hardworking-americans)\n' \
+          '[H&R Block](https://www.hrblock.com/tax-center/irs/tax-reform/tax-cuts-and-jobs-act)\n' \
+          '[Tax Foundation](https://taxfoundation.org/final-tax-cuts-and-jobs-act-details-analysis/)\n' \
+          '[H.R.1 - An Act to provide for reconciliation pursuant to titles II and V of the concurrent ' \
+          'resolution on the budget for fiscal year 2018.](https://www.congress.gov/bill/115th-congress' \
+          '/house-bill/1?q=%7B%22search%22%3A%5B%22Tax+Cuts+and+Jobs+Act%22%5D%7D&s=3&r=1)\n'
+
+    embed_var = discord.Embed(title='Sources for the Trump Tax Cuts, or TCJA of 2017', description=msg, color=0xff0000)
+    embed_var.set_thumbnail(url='https://static.politico.com/e6/1e/75bc724948dbb9d6473a7a139d32/19725-donald-trump-gty-'
+                                '773.jpg')
+    await ctx.channel.send(embed=embed_var)
 bot.run(TOKEN)
