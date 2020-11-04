@@ -9,7 +9,6 @@ bot by any other foreign entities, sole responsibility will be on the user of sa
 program.
 """
 
-
 import datetime
 import os
 import random as r
@@ -23,7 +22,6 @@ from googlesearch import search
 from googletrans import Translator
 from wolframclient.evaluation import WolframLanguageSession
 import encryption_cmd as cmd
-import stock_images as si
 import googletranslang
 import stocks
 
@@ -46,7 +44,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '2.5.2'
+version_num = '2.6.0'
 
 
 @bot.event
@@ -74,7 +72,8 @@ async def describe(ctx, *, arg):
 
 @bot.command(name='get', help='Takes stock symbol, returns price')
 async def load_stock(ctx, *, arg=None):
-    stocks = None
+    embed_var = None
+    stocks_n = None
     everything = None
     crypto_modifier = None
     if arg is None:
@@ -88,114 +87,63 @@ async def load_stock(ctx, *, arg=None):
 
         elif len(option_str) == 2:
             option = option_str[0]
-            stocks = option_str[1]
+            stocks_n = option_str[1]
 
         elif len(option_str) == 3:
             option = option_str[0]
-            stocks = option_str[1]
+            stocks_n = option_str[1]
             crypto_modifier = option_str[2]
 
         else:
             option = option_str[0]
-            stocks = option_str[1]
+            stocks_n = option_str[1]
             everything = option_str[3]
 
+        msg = "Please wait while I compile the information you have requested, approximately 2 to 3 seconds"
+        await ctx.channel.send(f'{msg}')
         await discord.channel.TextChannel.trigger_typing(self=ctx)
 
         if option == 'common':
             if everything == 'everything':
-                stock_list = {}
-                with open('common-stock-list.txt', 'r') as f:
-                    array = f.readlines()
-                current_date = datetime.datetime.now()
-                d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
-                stock_list[0] = d2
-                msg = "Please wait while I compile the information you have requested, approximately 2 to 3 seconds"
-                await ctx.channel.send(f'{msg}')
-                await discord.channel.TextChannel.trigger_typing(self=ctx)
-                num = 0
-                sub = stock_list[0] + '\n'
-                while num < (len(array)):
-                    string = array[num]
-                    stock_price = robin.stocks.get_latest_price(array[num])
-                    pb_ratio = robin.stocks.get_fundamentals(array[num], 'pb_ratio')
-                    pe_ratio = robin.stocks.get_fundamentals(array[num], 'pe_ratio')
-                    dividend_yield = robin.stocks.get_fundamentals(array[num], 'dividend_yield')
-                    sub += f'{string[0:-1]}\nPrice = ${stock_price[0]}\nP/B Ratio = {pb_ratio[0]}\nP/E Ratio = ' \
-                           f'{pe_ratio[0]}\nDividend Yield = {dividend_yield[0]}\n\n'
-                    num += 1
-                embed_var = discord.Embed(title='Common Stocks', description=sub, color=0xff0000)
-                await ctx.channel.send(embed=embed_var)
+                final_msg = stocks.LoadStock().common_everything()
+                embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
             else:
-                stock_list = {}
-                with open('common-stock-list.txt', 'r') as f:
-                    array = f.readlines()
-                current_date = datetime.datetime.now()
-                d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
-                stock_list[0] = d2
-                msg = "Please wait while I compile the information you have requested, approximately 2 to 3 seconds"
-                await ctx.channel.send(f'{msg}')
-                await discord.channel.TextChannel.trigger_typing(self=ctx)
-                num = 0
-                sub = stock_list[0] + '\n'
-                while num < (len(array)):
-                    string = array[num]
-                    stock_price = robin.stocks.get_latest_price(array[num])
-                    sub += f'{string[0:-1]} = ${str(stock_price[0])}\n'
-                    num += 1
-                embed_var = discord.Embed(title='Common Stocks', description=sub, color=0xff0000)
-                await ctx.channel.send(embed=embed_var)
+                final_msg = stocks.LoadStock().common()
+                embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
 
         elif option == 'crypto':
             if crypto_modifier is None:
-                crypto_value = robin.crypto.get_crypto_quote(stocks, 'mark_price')
-                if crypto_value is None:
-                    error_msg = 'I\'m sorry, but the stock you are looking for is not here, make sure you ' \
-                                'are using the correct Id and try again. If you can not figure it out, contact ' \
-                                f'the dev of this bot, {Discord_ID}'
-                    await ctx.channel.send(error_msg)
+                final_msg = stocks.LoadStock(stocks=stocks_n).crypto()
+                if len(final_msg) == 4:
+                    embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+                    embed_var.set_thumbnail(url=final_msg[3])
                 else:
-                    current_price = f'The current price of {stocks} is ${crypto_value}'
-                    embed_var = discord.Embed(title=f'{"Cryptocurrency"}', description=current_price, color=0x00b300)
-                    embed_var.set_thumbnail(url='https://th.bing.com/th/id/OIP.Y25UPylA8mnk-SfKSnEEGQHaFb?pid=Api&rs=1')
-                    await ctx.channel.send(embed=embed_var)
+                    embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
             else:
-                crypto_value = robin.crypto.get_crypto_quote(stocks, crypto_modifier)
-                if crypto_value is None:
-                    error_msg = 'I\'m sorry, but the stock you are looking for is not here, make sure you ' \
-                                'are using the correct Id and try again. If you can not figure it out, contact ' \
-                                f'the dev of this bot, {Discord_ID}'
-                    await ctx.channel.send(error_msg)
+                final_msg = stocks.LoadStock(stocks=stocks_n, crypto_modifier=crypto_modifier).crypto()
+                if len(final_msg) == 4:
+                    embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+                    embed_var.set_thumbnail(url=final_msg[3])
                 else:
-                    current_price = f'The {crypto_modifier} of {stocks} is {crypto_value}'
-                    embed_var = discord.Embed(title=f'{"Cryptocurrency"}', description=current_price, color=0x00b300)
-                    embed_var.set_thumbnail(url='https://th.bing.com/th/id/OIP.Y25UPylA8mnk-SfKSnEEGQHaFb?pid=Api&rs=1')
-                    await ctx.channel.send(embed=embed_var)
-        else:
-            if stocks == 'description':
-                description = robin.stocks.get_fundamentals(option, 'description')
-                await ctx.channel.send(description[0])
-            else:
-                stock_info = robin.stocks.get_latest_price(option)
-                pb_ratio = robin.stocks.get_fundamentals(option, 'pb_ratio')
-                pe_ratio = robin.stocks.get_fundamentals(option, 'pe_ratio')
-                dividend_yield = robin.stocks.get_fundamentals(option, 'dividend_yield')
-                if stock_info[0] is None:
-                    msg = f"Im sorry, but the stock you are looking for is not in the archives. " \
-                          f"If you think I made a mistake, please contact {Discord_ID} to resolve this issue"
-                    await ctx.channel.send(f'{msg}')
-                else:
-                    stock_info_number = stock_info[0]
-                    msg = f'Price = ${stock_info_number}\nP/B Ratio = {pb_ratio[0]}\nP/E Ratio = {pe_ratio[0]}\n' \
-                          f'Dividend Yield = {dividend_yield[0]}'
-                    embed_var = discord.Embed(title=f'{option}', description=msg, color=0x00ff00)
-                    url = si.load_stock_img(option)
-                    if url is None:
-                        await ctx.channel.send(embed=embed_var)
-                    else:
-                        embed_var.set_thumbnail(url=url)
-                        await ctx.channel.send(embed=embed_var)
+                    embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
 
+        else:
+            if stocks_n == 'description':
+                final_msg = stocks.LoadStock(option=option).stock_description()
+                if len(final_msg) == 4:
+                    embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+                    embed_var.set_thumbnail(url=final_msg[3])
+                else:
+                    embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+
+            else:
+                final_msg = stocks.LoadStock(option=option).stock()
+                if len(final_msg) == 4:
+                    embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+                    embed_var.set_thumbnail(url=final_msg[3])
+                else:
+                    embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+        await ctx.channel.send(embed=embed_var)
 
 @bot.command(name='add', help='Adds a symbol to the common stock list')
 async def mutation(ctx, *, arg):
@@ -258,7 +206,6 @@ async def encode(ctx, *, arg):
 
 @bot.command(name='echo', help='Echos back user input')
 async def echo(ctx, *, arg):
-
     """error_msg = "I'm sorry, that message is not allowed."
     if 'gay' in arg.lower():
         await ctx.channel.send(f'{error_msg}')
@@ -427,7 +374,7 @@ async def translate(ctx, user_input: str, trans_lang=None):
         translations = translator.translate([user_input], dest=list_lang[trans_lang])
         for translation in translations:
             msg = translation.origin + ' ----> ' + translation.text
-            error_msg = 'The section of text you want to translate makes the message over 2000 characters, '\
+            error_msg = 'The section of text you want to translate makes the message over 2000 characters, ' \
                         'please shorten it'
             if len(msg) > 2000:
                 await ctx.channel.send(f'{error_msg}')
@@ -476,59 +423,12 @@ async def leave_guild(ctx):
         await ctx.channel.send(msg)
 
 
-@bot.command(name='sources')
-async def resources(ctx):
-    msg = 'TCJA [Fox](https://www.foxbusiness.com/economy/trump-tax-cuts-and-the-middle-class-here-are-the-facts)\n' \
-          '[IRS](https://www.irs.gov/newsroom/tax-cuts-and-jobs-act-a-comparison-for-businesses)\n' \
-          '[US Treasury](https://home.treasury.gov/policy-issues/top-priorities/tax-cuts-and-jobs-ac' \
-          't/tax-cuts-for-the-american-family)\n' \
-          '[UST2](https://home.treasury.gov/policy-issues/top-priorities/tax-cuts-and-jobs-act/more-jobs' \
-          '-and-bigger-paychecks)\n' \
-          '[UST3](https://home.treasury.gov/policy-issues/top-priorities/tax-cuts-and-jobs-act/fairness' \
-          '-and-opportunity-for-hardworking-americans)\n' \
-          '[H&R Block](https://www.hrblock.com/tax-center/irs/tax-reform/tax-cuts-and-jobs-act)\n' \
-          '[Tax Foundation](https://taxfoundation.org/final-tax-cuts-and-jobs-act-details-analysis/)\n' \
-          '[H.R.1 - An Act to provide for reconciliation pursuant to titles II and V of the concurrent ' \
-          'resolution on the budget for fiscal year 2018.](https://www.congress.gov/bill/115th-congress' \
-          '/house-bill/1?q=%7B%22search%22%3A%5B%22Tax+Cuts+and+Jobs+Act%22%5D%7D&s=3&r=1)\n'
+@bot.command(name='compile')
+async def resources(ctx, title, links):
 
-    embed_var = discord.Embed(title='Sources for the Trump Tax Cuts, or TCJA of 2017', description=msg, color=0xff0000)
-    embed_var.set_thumbnail(url='https://static.politico.com/e6/1e/75bc724948dbb9d6473a7a139d32/19725-donald-trump-gty-'
-                                '773.jpg')
+    embed_var = discord.Embed(title=title, description=links, color=0xff0000)
+    embed_var.set_thumbnail(url='https://www.montrealassociates.com/media/montreal/client/datascience2.png')
     await ctx.channel.send(embed=embed_var)
 
-
-@bot.command(name='test')
-async def test(ctx, *, arg):
-    option = None
-    stocks_n = None
-    everything = None
-    crypto_modifier = None
-    if arg is None:
-        msg = "Im sorry, but I need the symbol for the stock you are looking for, please try again. " \
-              "If you think I made a mistake, please contact <@!610469915442282526>  to resolve this issue"
-        await ctx.channel.send(f'{msg}')
-    else:
-        option_str = arg.split()
-        if len(option_str) == 1:
-            option = option_str[0]
-
-        elif len(option_str) == 2:
-            option = option_str[0]
-            stocks_n = option_str[1]
-
-        elif len(option_str) == 3:
-            option = option_str[0]
-            stocks_n = option_str[1]
-            crypto_modifier = option_str[2]
-
-        else:
-            option = option_str[0]
-            stocks_n = option_str[1]
-            everything = option_str[3]
-
-    print(f'{option} {stocks_n} {crypto_modifier} {everything}')
-    msg = stocks.LoadStock(option).common()
-    await ctx.channel.send(msg)
 
 bot.run(TOKEN)
