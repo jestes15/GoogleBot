@@ -72,7 +72,6 @@ async def describe(ctx, *, arg):
 
 @bot.command(name='get', help='Takes stock symbol, returns price')
 async def load_stock(ctx, *, arg=None):
-    embed_var = None
     stocks_n = None
     everything = None
     crypto_modifier = None
@@ -145,12 +144,13 @@ async def load_stock(ctx, *, arg=None):
                     embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
         await ctx.channel.send(embed=embed_var)
 
+
 @bot.command(name='add', help='Adds a symbol to the common stock list')
 async def mutation(ctx, *, arg):
     await discord.channel.TextChannel.trigger_typing(self=ctx)
-    stocks = arg.split()
-    for words in stocks:
-        with open("common-stock-list.txt", 'a') as f:
+    stocks_n = arg.split()
+    for words in stocks_n:
+        with open("../GoogleBot-Cogs/common-stock-list.txt", 'a') as f:
             f.write(f'{words}\n')
             f.close()
     await ctx.channel.send("Success")
@@ -206,7 +206,8 @@ async def encode(ctx, *, arg):
 
 @bot.command(name='echo', help='Echos back user input')
 async def echo(ctx, *, arg):
-    """error_msg = "I'm sorry, that message is not allowed."
+    """
+    error_msg = "I'm sorry, that message is not allowed."
     if 'gay' in arg.lower():
         await ctx.channel.send(f'{error_msg}')
     elif 'homo' in arg.lower():

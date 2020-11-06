@@ -15,7 +15,7 @@ class LoadStock:
 
     def common(self):
         stock_list = {}
-        with open('common-stock-list.txt', 'r') as f:
+        with open('../GoogleBot-Cogs/common-stock-list.txt', 'r') as f:
             array = f.readlines()
         current_date = datetime.datetime.now()
         d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
@@ -34,7 +34,7 @@ class LoadStock:
 
     def common_everything(self):
         stock_list = {}
-        with open('common-stock-list.txt', 'r') as f:
+        with open('../GoogleBot-Cogs/common-stock-list.txt', 'r') as f:
             array = f.readlines()
         current_date = datetime.datetime.now()
         d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
