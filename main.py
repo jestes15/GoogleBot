@@ -44,7 +44,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '2.6.0'
+version_num = '2.7.0'
 
 
 @bot.event
@@ -70,7 +70,7 @@ async def describe(ctx, *, arg):
         await ctx.channel.send(embed=embed_var)
 
 
-@bot.command(name='get', help='Takes stock symbol, returns price')
+@bot.command(name='get', aliases=['robin', ''], help='Takes stock symbol, returns price')
 async def load_stock(ctx, *, arg=None):
     stocks_n = None
     everything = None
@@ -156,7 +156,7 @@ async def mutation(ctx, *, arg):
     await ctx.channel.send("Success")
 
 
-@bot.command(name='hello', help='Says hello back')
+@bot.command(name='hello', aliases=['hi', 'hola', 'sup'], help='Says hello back')
 async def on_message(message):
     await discord.channel.TextChannel.trigger_typing(self=message)
     hello_dictionary = {
@@ -426,10 +426,42 @@ async def leave_guild(ctx):
 
 @bot.command(name='compile')
 async def resources(ctx, title, links):
-
     embed_var = discord.Embed(title=title, description=links, color=0xff0000)
     embed_var.set_thumbnail(url='https://www.montrealassociates.com/media/montreal/client/datascience2.png')
     await ctx.channel.send(embed=embed_var)
+
+
+@bot.command(name='kek', aliases=['kms', 'bs'])
+async def derp(ctx, *, arg):
+    punctuation = [',', '.', '`', '!', '@', '#', '$', '%', '^','&', '*', '()', '_', '+', '{', '}', '|', ':', '"', '<',
+                   '>', '?', '~', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', ';']
+    ret = []
+    lower = False
+    upper = True
+    print(arg)
+    for letter in arg:
+        print(letter)
+        if letter == " ":
+            ret.append(letter)
+        elif letter in punctuation:
+            print(letter)
+            ret.append(letter)
+        elif lower:
+            lower = False
+            upper = True
+            print(f'{lower} {upper}')
+            laf = letter.lower()
+            print(laf)
+            ret.append(letter.lower())
+        elif upper:
+            upper = False
+            lower = True
+            print(f'{lower} {upper}')
+            uaf = letter.upper()
+            print(uaf)
+            ret.append(letter.upper())
+
+    await ctx.channel.send("".join(ret))
 
 
 bot.run(TOKEN)
