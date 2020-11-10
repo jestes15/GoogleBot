@@ -44,7 +44,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '2.7.0'
+version_num = '2.7.1'
 
 
 @bot.event
@@ -206,17 +206,6 @@ async def encode(ctx, *, arg):
 
 @bot.command(name='echo', help='Echos back user input')
 async def echo(ctx, *, arg):
-    """
-    error_msg = "I'm sorry, that message is not allowed."
-    if 'gay' in arg.lower():
-        await ctx.channel.send(f'{error_msg}')
-    elif 'homo' in arg.lower():
-        await ctx.channel.send(f'{error_msg}')
-    elif 'fag' in arg.lower():
-        await ctx.channel.send(f'{error_msg}')
-    elif 'queer' in arg.lower():
-        await ctx.channel.send(f'{error_msg}')
-    else:"""
     await discord.channel.TextChannel.trigger_typing(self=ctx)
     await ctx.channel.send(f'{arg}')
 
