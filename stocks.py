@@ -13,7 +13,8 @@ class LoadStock:
         self.crypto_modifier = crypto_modifier
         self.description = everything
 
-    def common(self):
+    @staticmethod
+    def common():
         stock_list = {}
         with open('../GoogleBot-Cogs/common-stock-list.txt', 'r') as f:
             array = f.readlines()
@@ -32,7 +33,8 @@ class LoadStock:
         array = [title, sub, color]
         return array
 
-    def common_everything(self):
+    @staticmethod
+    def common_everything():
         stock_list = {}
         with open('../GoogleBot-Cogs/common-stock-list.txt', 'r') as f:
             array = f.readlines()
