@@ -16,7 +16,7 @@ class LoadStock:
     @staticmethod
     def common():
         stock_list = {}
-        with open('../GoogleBot-Cogs/common-stock-list.txt', 'r') as f:
+        with open('common-stock-list.txt', 'r') as f:
             array = f.readlines()
         current_date = datetime.datetime.now()
         d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
@@ -36,7 +36,7 @@ class LoadStock:
     @staticmethod
     def common_everything():
         stock_list = {}
-        with open('../GoogleBot-Cogs/common-stock-list.txt', 'r') as f:
+        with open('common-stock-list.txt', 'r') as f:
             array = f.readlines()
         current_date = datetime.datetime.now()
         d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
