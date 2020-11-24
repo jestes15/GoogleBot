@@ -44,7 +44,7 @@ session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
-version_num = '2.7.2'
+version_num = '2.7.3'
 
 
 @bot.event
@@ -54,8 +54,12 @@ async def on_ready():
     await bot.change_presence(activity=discord.Game(name="search and record"))
     await channel.send(f'{bot.user.name} has connected to discord')
     # Sends an online message to the aforementioned channel
-    msg = 'WolframLanguageSession initialized'
+    msg = 'WolframLanguageSession Initialized'
     await channel.send(f'{msg}')
+    # Send a thank you message with a powered by Python message
+    embed_var = discord.Embed(title='Thank you for using me!', description="Powered by:", color=0xff000b)
+    embed_var.set_thumbnail(url='https://www.python.org/static/community_logos/python-logo-master-v3-TM.png')
+    await channel.send(embed=embed_var)
 
 
 @bot.command(name='describe', help='Describes itself or a command.')
@@ -416,8 +420,14 @@ async def leave_guild(ctx):
 @bot.command(name='compile')
 async def resources(ctx, title, links):
     embed_var = discord.Embed(title=title, description=links, color=0xff0000)
-    embed_var.set_thumbnail(url='https://www.montrealassociates.com/media/montreal/client/datascience2.png')
+    embed_var.set_thumbnail(url='https://london.ac.uk/sites/default/files/styles/max_1300x1300/public/2018-03/da'
+                                'ta-science.jpg?itok=bTPDs5nf')
     await ctx.channel.send(embed=embed_var)
+
+
+@bot.command(name='kys')
+async def kys(ctx):
+    await ctx.channel.send('lol')
 
 
 @bot.command(name='kek', aliases=['kms', 'bs'])
@@ -427,27 +437,18 @@ async def derp(ctx, *, arg):
     ret = []
     lower = False
     upper = True
-    print(arg)
     for letter in arg:
-        print(letter)
         if letter == " ":
             ret.append(letter)
         elif letter in punctuation:
-            print(letter)
             ret.append(letter)
         elif lower:
             lower = False
             upper = True
-            print(f'{lower} {upper}')
-            laf = letter.lower()
-            print(laf)
             ret.append(letter.lower())
         elif upper:
             upper = False
             lower = True
-            print(f'{lower} {upper}')
-            uaf = letter.upper()
-            print(uaf)
             ret.append(letter.upper())
 
     await ctx.channel.send("".join(ret))
