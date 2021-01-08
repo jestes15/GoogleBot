@@ -77,7 +77,9 @@ async def describe(ctx, *, arg):
         await ctx.channel.send(embed=embed_var)
 
 
-@bot.command(name='get', aliases=['robin', ''], help='Takes stock symbol, returns price')
+@bot.command(name='get', aliases=['robin'], help='Takes stock symbol, returns price\n[Hey Google | "$ " | "<> "] [get |'
+                                                 ' robin] [common | crypto | pharma | <stock name>] '
+                                                 'if crypto[-f | -s <crypto name>] [description]')
 async def load_stock(ctx, *, arg=None):
     stocks_n = None
     everything = None
@@ -108,7 +110,7 @@ async def load_stock(ctx, *, arg=None):
 
         msg = "Please wait while I compile the information you have requested, approximately 2 to 3 seconds"
         message = await ctx.channel.send(f'{msg}')
-        await discord.channel.TextChannel.trigger_typing(self=ctx)
+        # await discord.channel.TextChannel.trigger_typing(self=ctx)
 
         if option == 'common':
             if everything == 'everything':
