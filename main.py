@@ -30,8 +30,8 @@ from discord import FFmpegPCMAudio
 from discord.utils import get
 from pretty_help import PrettyHelp
 
-from discord_slash import SlashCommand
-from discord_slash import SlashContext
+# from discord_slash import SlashCommand
+# from discord_slash import SlashContext
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -41,7 +41,7 @@ password = os.getenv('ROBINHOOD_PASSWORD')
 robin.authentication.login(username, password)
 
 bot = commands.Bot(command_prefix=["Hey Google, ", "$ ", "<> "], help_command=PrettyHelp())
-slash = SlashCommand(bot)
+# slash = SlashCommand(bot)
 today = date.today()
 session = WolframLanguageSession()
 
