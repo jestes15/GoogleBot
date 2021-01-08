@@ -30,6 +30,8 @@ from discord import FFmpegPCMAudio
 from discord.utils import get
 from pretty_help import PrettyHelp
 
+import asyncio
+
 # from discord_slash import SlashCommand
 # from discord_slash import SlashContext
 
@@ -55,14 +57,14 @@ async def on_ready():
     channel = bot.get_channel(756568695320608910)  # Gets the channel with this channel id
     print(f'{bot.user.name} has connected to Discord')  # Sends an online message to the command line
     await bot.change_presence(activity=discord.Game(name="search and record"))
-    await channel.send(f'{bot.user.name} has connected to discord')
+    message = await channel.send(f'{bot.user.name} has connected to discord')
     # Sends an online message to the aforementioned channel
     msg = 'WolframLanguageSession Initialized'
-    await channel.send(f'{msg}')
+    await message.edit(content=f"{bot.user.name} has connected to discord\n{msg}")
     # Send a thank you message with a powered by Python message
     embed_var = discord.Embed(title='Thank you for using me!', description="Powered by:", color=0xff000b)
     embed_var.set_thumbnail(url='https://www.python.org/static/community_logos/python-logo-master-v3-TM.png')
-    await channel.send(embed=embed_var)
+    await message.edit(embed=embed_var)
 
 
 @bot.command(name='describe', help='Describes itself or a command.')
@@ -82,6 +84,7 @@ async def load_stock(ctx, *, arg=None):
     stocks_n = None
     everything = None
     crypto_modifier = None
+    embed_var = None
     if arg is None:
         msg = "Im sorry, but I need the symbol for the stock you are looking for, please try again. " \
               "If you think I made a mistake, please contact <@!610469915442282526>  to resolve this issue"
@@ -106,7 +109,7 @@ async def load_stock(ctx, *, arg=None):
             everything = option_str[3]
 
         msg = "Please wait while I compile the information you have requested, approximately 2 to 3 seconds"
-        await ctx.channel.send(f'{msg}')
+        message = await ctx.channel.send(f'{msg}')
         await discord.channel.TextChannel.trigger_typing(self=ctx)
 
         if option == 'common':
@@ -163,7 +166,8 @@ async def load_stock(ctx, *, arg=None):
                     embed_var.set_thumbnail(url=final_msg[3])
                 else:
                     embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
-        await ctx.channel.send(embed=embed_var)
+        await asyncio.sleep(2)
+        await message.edit(embed=embed_var, content="")
 
 
 @bot.command(name='add', help='Adds a symbol to the common stock list')
@@ -349,15 +353,14 @@ async def date(ctx, is2: str, the: str, object2: str):
 
 @bot.command(name='google', help='Googles the term specified (place in quotes)')
 async def google(ctx, *, query: str):
-    await discord.channel.TextChannel.trigger_typing(self=ctx)
     wait_message = "Please wait while I gather the top ten search results."
     await discord.channel.TextChannel.trigger_typing(self=ctx)
-    await ctx.channel.send(wait_message)
+    message = await ctx.channel.send(wait_message)
     results = ''
     for j in search(query, tld="co.in", stop=10, pause=2):
         results += "<" + j + ">\n"
 
-    await ctx.channel.send(f'{results}')
+    await message.edit(content=f"{results}")
 
 
 @bot.command(name='evaluate', help='evaluates line of code given')
@@ -409,7 +412,6 @@ async def join(ctx):
     except AttributeError as e:
         error_msg = 'You are not currently in a channel, therefore I can not join you.' \
                     'Please join a channel then try again.'
-        await ctx.channel.send(f'{error_msg}')
         await ctx.channel.send(f'{error_msg}\nError code: {e}')
         return
 
