@@ -119,27 +119,31 @@ async def load_stock(ctx, *, arg=None):
 
         elif option == 'crypto':
             if crypto_modifier is None:
-                final_msg = stocks.LoadStock(stocks=stocks_n).crypto()
-                if len(final_msg) == 4:
+
+                if stocks_n == '-f':
+                    final_msg = stocks.LoadStock.crypto_stock()
                     embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
                     embed_var.set_thumbnail(url=final_msg[3])
-                else:
-                    embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+
             else:
-                final_msg = stocks.LoadStock(stocks=stocks_n, crypto_modifier=crypto_modifier).crypto()
-                if len(final_msg) == 4:
-                    embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
-                    embed_var.set_thumbnail(url=final_msg[3])
+                if stocks_n == '-s':
+                    final_msg = stocks.LoadStock(stocks=crypto_modifier).crypto()
+                    if len(final_msg) == 4:
+                        embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+                        embed_var.set_thumbnail(url=final_msg[3])
+                    else:
+                        embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+
                 else:
-                    embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+                    final_msg = stocks.LoadStock(stocks=stocks_n, crypto_modifier=crypto_modifier).crypto()
+                    if len(final_msg) == 4:
+                        embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+                        embed_var.set_thumbnail(url=final_msg[3])
+                    else:
+                        embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
 
         elif option == 'pharma':
             final_msg = stocks.LoadStock.pharma_stock()
-            embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
-            embed_var.set_thumbnail(url=final_msg[3])
-
-        elif option == 'crypto-full':
-            final_msg = stocks.LoadStock.crypto_stock()
             embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
             embed_var.set_thumbnail(url=final_msg[3])
 
