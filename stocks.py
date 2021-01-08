@@ -70,7 +70,7 @@ class LoadStock:
             return array
         else:
             title = 'Cryptocurrency'
-            current_price = f'The {self.crypto_modifier} of {self.stocks} is {crypto_value}'
+            current_price = f'The price of {self.stocks} is ${crypto_value}'
             color = 0x00ff00
             url = 'https://th.bing.com/th/id/OIP.Y25UPylA8mnk-SfKSnEEGQHaFb?pid=Api&rs=1'
             array = [title, current_price, color, url]
