@@ -30,6 +30,9 @@ from discord import FFmpegPCMAudio
 from discord.utils import get
 from pretty_help import PrettyHelp
 
+from discord_slash import SlashCommand
+from discord_slash import SlashContext
+
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 username = os.getenv('ROBINHOOD_USERNAME')
@@ -37,8 +40,8 @@ password = os.getenv('ROBINHOOD_PASSWORD')
 
 robin.authentication.login(username, password)
 
-bot = commands.Bot(command_prefix="Hey Google, ", help_command=PrettyHelp())
-
+bot = commands.Bot(command_prefix=["Hey Google, ", "$ ", "<> "], help_command=PrettyHelp())
+slash = SlashCommand(bot)
 today = date.today()
 session = WolframLanguageSession()
 
@@ -129,6 +132,16 @@ async def load_stock(ctx, *, arg=None):
                     embed_var.set_thumbnail(url=final_msg[3])
                 else:
                     embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+
+        elif option == 'pharma':
+            final_msg = stocks.LoadStock.pharma_stock()
+            embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+            embed_var.set_thumbnail(url=final_msg[3])
+
+        elif option == 'crypto-full':
+            final_msg = stocks.LoadStock.crypto_stock()
+            embed_var = discord.Embed(title=final_msg[0], description=final_msg[1], color=final_msg[2])
+            embed_var.set_thumbnail(url=final_msg[3])
 
         else:
             if stocks_n == 'description':

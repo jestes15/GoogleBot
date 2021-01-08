@@ -1,5 +1,5 @@
 # GoogleBot
-
+© by Joshua Estes 2020
 This bot is made to do an assortment of tasks to help users within a discord server. Can do complex math powered by Wolfram Engine, can use Google and can look at stocks prices and other metrics, powered by Robinhood.
 
 To install the discord bot, pull it onto a computer using `git clone https://github.com/jestes15/GoogleBot.git` and run the init script.

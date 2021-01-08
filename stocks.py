@@ -1,6 +1,7 @@
 import robin_stocks as robin
 import datetime
 import stock_images as si
+import Stock_lists as list
 
 msg = 'hello'
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
@@ -126,4 +127,26 @@ class LoadStock:
             array = [title, description[0], color]
         else:
             array = [title, description[0], color, url]
+        return array
+
+    @staticmethod
+    def pharma_stock():
+        title = "Pharma stocks"
+        ret_msg = ""
+        for x in list.pharma_stock:
+            ret_msg += f"{x} = ${robin.stocks.get_latest_price(x)[0]}\n"
+        color = 0x00fb30
+        url = "https://cdn.robinhood.com/app_assets/list_illustrations/pharma/header_web/3x.png"
+        array = [title, ret_msg, color, url]
+        return array
+
+    @staticmethod
+    def crypto_stock():
+        title = "Cryptocurrency"
+        ret_msg = ""
+        for x in list.crypto_list:
+            ret_msg += f"{x} = ${robin.crypto.get_crypto_quote(x, 'mark_price')}\n"
+        color = 0x800080
+        url = "https://cdn.robinhood.com/app_assets/list_illustrations/crypto/header_web/3x.png"
+        array = [title, ret_msg, color, url]
         return array
