@@ -21,9 +21,7 @@ from dotenv import load_dotenv
 from googlesearch import search
 from googletrans import Translator
 from wolframclient.evaluation import WolframLanguageSession
-import encryption_cmd as cmd
-import googletranslang
-import stocks
+from GoogleBot_PyFiles import encryption_cmd as cmd, googletranslang, stocks
 
 from time import sleep
 from discord import FFmpegPCMAudio

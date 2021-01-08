@@ -1,7 +1,6 @@
 import robin_stocks as robin
 import datetime
-import stock_images as si
-import Stock_lists as list
+from GoogleBot_PyFiles import stock_images as si, Stock_lists as list
 
 msg = 'hello'
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
@@ -17,7 +16,7 @@ class LoadStock:
     @staticmethod
     def common():
         stock_list = {}
-        with open('common-stock-list.txt', 'r') as f:
+        with open('../common-stock-list.txt', 'r') as f:
             array = f.readlines()
         current_date = datetime.datetime.now()
         d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
@@ -37,7 +36,7 @@ class LoadStock:
     @staticmethod
     def common_everything():
         stock_list = {}
-        with open('common-stock-list.txt', 'r') as f:
+        with open('../common-stock-list.txt', 'r') as f:
             array = f.readlines()
         current_date = datetime.datetime.now()
         d2 = current_date.strftime("%m/%d/%Y %I:%M:%S %p\n")
