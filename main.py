@@ -22,6 +22,7 @@ from googlesearch import search
 from googletrans import Translator
 from wolframclient.evaluation import WolframLanguageSession
 from GoogleBot_PyFiles import encryption_cmd as cmd, googletranslang, stocks
+from GoogleBot_PyFiles import color
 
 from time import sleep
 from discord import FFmpegPCMAudio
@@ -471,6 +472,34 @@ async def derp(ctx, *, arg):
             ret.append(letter.upper())
 
     await ctx.channel.send("".join(ret))
+
+
+@bot.command(name="add_color")
+async def add_role(ctx, hex_color):
+    for role in ctx.author.roles:
+        if role.name[0] == "#" and color.is_valid_hex(role.name[1:]):
+            await ctx.channel.send("You already have a color!")
+            return
+    if not color.is_valid_hex(hex_color):
+        if hex_color.startswith("#"):
+            await ctx.channel.send("You didn't supply a valid number")
+        else:
+            await ctx.channel.send("Didn't start with a #")
+        return
+    color_code = int(hex_color[1:].upper(), 16)
+    role = await ctx.guild.create_role(name=hex_color, color=discord.Color(color_code))
+    await ctx.message.author.add_roles(role)
+    await ctx.channel.send(f"Added {hex_color} to {ctx.message.author}")
+
+
+@bot.command(name="remove_color")
+async def remove_role(ctx):
+    roles = ctx.message.author.roles
+    for role in roles:
+        if color.is_valid_hex(role.name):
+            await ctx.author.remove_roles(role)
+            await ctx.channel.send(f"removed role {role} from {ctx.message.author}")
+            return
 
 
 bot.run(TOKEN)
