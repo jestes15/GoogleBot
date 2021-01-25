@@ -476,6 +476,7 @@ async def derp(ctx, *, arg):
 
 @bot.command(name="add_color")
 async def add_role(ctx, hex_color):
+    role = None
     for role in ctx.author.roles:
         if role.name[0] == "#" and color.is_valid_hex(role.name[1:]):
             await ctx.channel.send("You already have a color!")
@@ -487,7 +488,10 @@ async def add_role(ctx, hex_color):
             await ctx.channel.send("Didn't start with a #")
         return
     color_code = int(hex_color[1:].upper(), 16)
-    role = await ctx.guild.create_role(name=hex_color, color=discord.Color(color_code))
+    try:
+        role = await ctx.guild.create_role(name=hex_color, color=discord.Color(color_code))
+    except 403:
+        await ctx.channel.send("I'm sorry, but I do not have the necessary permissions to do this")
     await ctx.message.author.add_roles(role)
     await ctx.channel.send(f"Added {hex_color} to {ctx.message.author}")
 
