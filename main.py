@@ -42,7 +42,6 @@ password = os.getenv('ROBINHOOD_PASSWORD')
 robin.authentication.login(username, password)
 
 bot = commands.Bot(command_prefix=["Hey Google, ", "$ ", "<> "], help_command=PrettyHelp())
-# slash = SlashCommand(bot)
 today = date.today()
 session = WolframLanguageSession()
 
