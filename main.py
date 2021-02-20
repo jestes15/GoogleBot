@@ -473,8 +473,14 @@ async def derp(ctx, *, arg):
     await ctx.channel.send("".join(ret))
 
 
+perms_error = "I am sorry, but I do not have the permissions to proceed with this command. " \
+              "If you believe that there is a mistake, contact the admins or <@!610469915442282526>. " \
+              "Thank you"
+
+
 @bot.command(name="add_color")
 async def add_role(ctx, hex_color):
+    role = None
     for role in ctx.author.roles:
         if role.name[0] == "#" and color.is_valid_hex(role.name[1:]):
             await ctx.channel.send("You already have a color!")
@@ -486,9 +492,12 @@ async def add_role(ctx, hex_color):
             await ctx.channel.send("Didn't start with a #")
         return
     color_code = int(hex_color[1:].upper(), 16)
-    role = await ctx.guild.create_role(name=hex_color, color=discord.Color(color_code))
-    await ctx.message.author.add_roles(role)
-    await ctx.channel.send(f"Added {hex_color} to {ctx.message.author}")
+    try:
+        role = await ctx.guild.create_role(name=hex_color, color=discord.Color(color_code))
+        await ctx.message.author.add_roles(role)
+        await ctx.channel.send(f"Added {hex_color} to <@!{ctx.author.id}>")
+    except discord.errors.Forbidden:
+        await ctx.channel.send(perms_error)
 
 
 @bot.command(name="remove_color")
@@ -496,8 +505,11 @@ async def remove_role(ctx):
     roles = ctx.message.author.roles
     for role in roles:
         if color.is_valid_hex(role.name):
-            await ctx.author.remove_roles(role)
-            await ctx.channel.send(f"removed role {role} from {ctx.message.author}")
+            try:
+                await ctx.author.remove_roles(role)
+            except discord.errors.Forbidden:
+                await ctx.channel.send(perms_error)
+            await ctx.channel.send(f"removed role {role} from <@!{ctx.author.id}>")
             return
 
 
