@@ -1,5 +1,5 @@
 def bibleVerse(book_name: str, chapter: int, verse: int, last_verse=0) :
-    location = 'Bible/' + book_name + '/' + book_name + '_' + str(chapter) + '.txt'
+    location = './BiblePackage/Bible/' + book_name + '/' + book_name + '_' + str(chapter) + '.txt'
     with open(location, 'r') as bible:
         bible_read = bible.readlines()
 

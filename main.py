@@ -314,7 +314,6 @@ async def GetBibleVerse(ctx, for2: str, book_name: str, chapter: int, verse: int
     await ctx.channel.send(embed=embed_var)
 
 
-
 @bot.command(name='what', help='Returns the current date')
 async def date(ctx, is2: str, the: str, object2: str):
     await discord.channel.TextChannel.trigger_typing(self=ctx)
