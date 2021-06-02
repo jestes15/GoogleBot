@@ -28,7 +28,7 @@ from time import sleep
 from discord import FFmpegPCMAudio
 from discord.utils import get
 from pretty_help import PrettyHelp
-
+from BiblePackage import BibleGet
 import asyncio
 
 # from discord_slash import SlashCommand
@@ -308,35 +308,11 @@ async def image(ctx, *, arg):
 @bot.command(name='search', help='syntax=for <book><chapter><start-verse><optional: end-verse>')
 async def GetBibleVerse(ctx, for2: str, book_name: str, chapter: int, verse: int, last_verse=0):
     await discord.channel.TextChannel.trigger_typing(self=ctx)
-    location = 'Bible/' + book_name + '/' + book_name + '_' + str(chapter) + '.txt'
-    with open(location, 'r') as bible:
-        bible_read = bible.readlines()
+    var = BibleGet.bibleVerse(book_name, chapter, verse, last_verse)
 
-        if last_verse == 0:
-            range_verse = f'{book_name} {chapter}:{verse}'
-            verse_line = 2 * (verse - 1)
-            msg = bible_read[verse_line]
-            embed_var = discord.Embed(title=range_verse, description=msg, color=0xffff00)
-            await ctx.channel.send(embed=embed_var)
+    embed_var = discord.Embed(title=var[0], description=var[1], color=var[2])
+    await ctx.channel.send(embed=embed_var)
 
-        else:
-            i = verse
-            i_i = last_verse + 1
-            bible_verse = ''
-            range_verse = f'{book_name} {chapter}:{verse}-{last_verse}'
-            while i < i_i:
-                verse_line = 2 * (i - 1)
-                bible_verse += bible_read[verse_line] + '\n'
-                i += 1
-            length = len(bible_verse)
-            if length < 2001:
-                embed_var = discord.Embed(title=range_verse, description=bible_verse, color=0xffb300)
-                await ctx.channel.send(embed=embed_var)
-            else:
-                msg = "Error: You have requested too many Bible verses " \
-                      "and have exceeded the discord limit of 2000 characters " \
-                      "please shorten your request and try again."
-                await ctx.channel.send(f'{msg}')
 
 
 @bot.command(name='what', help='Returns the current date')
@@ -480,7 +456,6 @@ perms_error = "I am sorry, but I do not have the permissions to proceed with thi
 
 @bot.command(name="add_color")
 async def add_role(ctx, hex_color):
-    role = None
     for role in ctx.author.roles:
         if role.name[0] == "#" and color.is_valid_hex(role.name[1:]):
             await ctx.channel.send("You already have a color!")
