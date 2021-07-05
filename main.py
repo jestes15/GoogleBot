@@ -17,6 +17,7 @@ import discord
 import googletrans
 import robin_stocks as robin
 import pyotp
+from wolframclient.evaluation import WolframLanguageSession
 from discord.ext import commands
 from dotenv import load_dotenv
 from googlesearch import search
@@ -31,9 +32,6 @@ from pretty_help import PrettyHelp
 from BiblePackage import BibleGet
 import asyncio
 
-# from discord_slash import SlashCommand
-# from discord_slash import SlashContext
-
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 username = os.getenv('ROBINHOOD_USERNAME')
@@ -41,6 +39,7 @@ password = os.getenv('ROBINHOOD_PASSWORD')
 
 totp = pyotp.TOTP("ODWNVJJZLZIOJB6F").now()
 robin.robinhood.login(username, password, mfa_code=totp)
+session = WolframLanguageSession()
 
 bot = commands.Bot(command_prefix=["Hey Google, ", "$ ", "<> "], help_command=PrettyHelp())
 today = date.today()
@@ -312,6 +311,12 @@ async def GetBibleVerse(ctx, for2: str, book_name: str, chapter: int, verse: int
 
     embed_var = discord.Embed(title=var[0], description=var[1], color=var[2])
     await ctx.channel.send(embed=embed_var)
+
+
+@bot.command(name='solve', help='Solves any function given in Wolfram Format')
+async def mathematica(ctx, function: str):
+    evaluated = session.evaluate(function)
+    await ctx.channel.send(f'```\n{evaluated}```')
 
 
 @bot.command(name='what', help='Returns the current date')
