@@ -16,11 +16,11 @@ from datetime import date
 import discord
 import googletrans
 import robin_stocks as robin
+import pyotp
 from discord.ext import commands
 from dotenv import load_dotenv
 from googlesearch import search
 from googletrans import Translator
-from wolframclient.evaluation import WolframLanguageSession
 from GoogleBot_PyFiles import encryption_cmd as cmd, googletranslang, stocks
 from GoogleBot_PyFiles import color
 
@@ -39,11 +39,11 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 username = os.getenv('ROBINHOOD_USERNAME')
 password = os.getenv('ROBINHOOD_PASSWORD')
 
-robin.authentication.login(username, password)
+totp = pyotp.TOTP("ODWNVJJZLZIOJB6F").now()
+robin.robinhood.login(username, password, mfa_code=totp)
 
 bot = commands.Bot(command_prefix=["Hey Google, ", "$ ", "<> "], help_command=PrettyHelp())
 today = date.today()
-session = WolframLanguageSession()
 
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 
@@ -342,12 +342,6 @@ async def google(ctx, *, query: str):
 async def evaluate(ctx, code: str):
     g3 = eval(code)
     await ctx.channel.send(f'{g3}')
-
-
-@bot.command(name='solve', help='Solves any function given in Wolfram Format')
-async def mathematica(ctx, function: str):
-    evaluated = session.evaluate(function)
-    await ctx.channel.send(f'```\n{evaluated}```')
 
 
 @bot.command(name='translate', help='Translates a string to another language')
