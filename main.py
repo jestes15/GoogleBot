@@ -17,6 +17,7 @@ import discord
 import googletrans
 import robin_stocks as robin
 import pyotp
+from discord.ext.commands import has_permissions
 from wolframclient.evaluation import WolframLanguageSession
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -37,8 +38,6 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 username = os.getenv('ROBINHOOD_USERNAME')
 password = os.getenv('ROBINHOOD_PASSWORD')
 
-totp = pyotp.TOTP("ODWNVJJZLZIOJB6F").now()
-robin.robinhood.login(username, password, mfa_code=totp)
 session = WolframLanguageSession()
 
 bot = commands.Bot(command_prefix=["Hey Google, ", "$ ", "<> "], help_command=PrettyHelp())
@@ -80,6 +79,8 @@ async def describe(ctx, *, arg):
                                                  ' robin] [common | crypto | pharma | <stock name>] '
                                                  'if crypto[-f | -s <crypto name>] [description]')
 async def load_stock(ctx, *, arg=None):
+    totp = pyotp.TOTP("ODWNVJJZLZIOJB6F").now()
+    robin.robinhood.login(username, password, mfa_code=totp)
     stocks_n = None
     everything = None
     crypto_modifier = None
@@ -304,8 +305,8 @@ async def image(ctx, *, arg):
         await ctx.channel.send(file=discord.File(f'Images/image{x1}.jpg'))
 
 
-@bot.command(name='search', help='syntax=for <book><chapter><start-verse><optional: end-verse>')
-async def GetBibleVerse(ctx, for2: str, book_name: str, chapter: int, verse: int, last_verse=0):
+@bot.command(name='bible', help='syntax=<book><chapter><start-verse><optional: end-verse>')
+async def GetBibleVerse(ctx, book_name: str, chapter: int, verse: int, last_verse=0):
     await discord.channel.TextChannel.trigger_typing(self=ctx)
     var = BibleGet.bibleVerse(book_name, chapter, verse, last_verse)
 
@@ -319,16 +320,20 @@ async def mathematica(ctx, function: str):
     await ctx.channel.send(f'```\n{evaluated}```')
 
 
-@bot.command(name='what', help='Returns the current date')
-async def date(ctx, is2: str, the: str, object2: str):
+@bot.command(name='date', help='Returns the current date')
+async def date(ctx, object2: str):
     await discord.channel.TextChannel.trigger_typing(self=ctx)
-    if object2 == 'date':
+    if object2 == '-d':
         d1 = today.strftime("%m/%d/%Y")
         await ctx.channel.send(d1)
-    else:
+    elif object2 == "-t":
         current = datetime.datetime.now()
         d2 = current.strftime("%I:%M:%S %p")
         await ctx.channel.send(d2)
+    else:
+        d1 = today.strftime("%m/%d/%Y")
+        current = datetime.datetime.now().strftime("%I:%M:%S %p")
+        await ctx.channel.send(f"The current date and time is: {d1} {current}")
 
 
 @bot.command(name='google', help='Googles the term specified (place in quotes)')
@@ -345,6 +350,8 @@ async def google(ctx, *, query: str):
 
 @bot.command(name='evaluate', help='evaluates line of code given')
 async def evaluate(ctx, code: str):
+    if code == "help" or code == "help()":
+        await ctx.channel.send(f"I'm sorry, but {code} is not a valid argument for this function")
     g3 = eval(code)
     await ctx.channel.send(f'{g3}')
 
@@ -483,7 +490,4 @@ async def remove_role(ctx):
             except discord.errors.Forbidden:
                 await ctx.channel.send(perms_error)
             await ctx.channel.send(f"removed role {role} from <@!{ctx.author.id}>")
-            return
-
-
 bot.run(TOKEN)
