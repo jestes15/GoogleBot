@@ -1,0 +1,8 @@
+{
+	"running": false,
+	"client": {
+		"name": "Jane Doe",
+		"phone": null,
+		"email": "janedoe@email.com"
+	}
+}

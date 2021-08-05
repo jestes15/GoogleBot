@@ -9,6 +9,7 @@ bot by any other foreign entities, sole responsibility will be on the user of sa
 program.
 """
 
+import backend_operations
 import datetime
 import os
 import random as r
@@ -18,7 +19,7 @@ import googletrans
 import robin_stocks as robin
 import pyotp
 from discord.ext.commands import has_permissions
-from wolframclient.evaluation import WolframLanguageSession
+# from wolframclient.evaluation import WolframLanguageSession
 from discord.ext import commands
 from dotenv import load_dotenv
 from googlesearch import search
@@ -38,7 +39,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 username = os.getenv('ROBINHOOD_USERNAME')
 password = os.getenv('ROBINHOOD_PASSWORD')
 
-session = WolframLanguageSession()
+# session = WolframLanguageSession()
 
 bot = commands.Bot(command_prefix=["Hey Google, ", "$ ", "<> "], help_command=PrettyHelp())
 today = date.today()
@@ -53,14 +54,17 @@ async def on_ready():
     channel = bot.get_channel(756568695320608910)  # Gets the channel with this channel id
     print(f'{bot.user.name} has connected to Discord')  # Sends an online message to the command line
     await bot.change_presence(activity=discord.Game(name="search and record"))
-    message = await channel.send(f'{bot.user.name} has connected to discord')
     # Sends an online message to the aforementioned channel
+    message = await channel.send(f'{bot.user.name} has connected to discord')
     msg = 'WolframLanguageSession Initialized'
     await message.edit(content=f"{bot.user.name} has connected to discord\n{msg}")
-    # Send a thank you message with a powered by Python message
     embed_var = discord.Embed(title='Thank you for using me!', description="Powered by:", color=0xff000b)
     embed_var.set_thumbnail(url='https://www.python.org/static/community_logos/python-logo-master-v3-TM.png')
-    await message.edit(embed=embed_var)
+    await message.edit(embed=embed_var)  # Send a thank you message with a powered by Python message
+
+    backend_operations.load_data_file()
+    backend_operations.data["running"] = True
+    backend_operations.dump_data()
 
 
 @bot.command(name='describe', help='Describes itself or a command.')
@@ -432,7 +436,7 @@ async def kys(ctx):
 
 @bot.command(name='kek', aliases=['kms', 'bs'])
 async def derp(ctx, *, arg):
-    punctuation = [',', '.', '`', '!', '@', '#', '$', '%', '^','&', '*', '()', '_', '+', '{', '}', '|', ':', '"', '<',
+    punctuation = [',', '.', '`', '!', '@', '#', '$', '%', '^', '&', '*', '()', '_', '+', '{', '}', '|', ':', '"', '<',
                    '>', '?', '~', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', ';']
     ret = []
     lower = False
@@ -490,4 +494,11 @@ async def remove_role(ctx):
             except discord.errors.Forbidden:
                 await ctx.channel.send(perms_error)
             await ctx.channel.send(f"removed role {role} from <@!{ctx.author.id}>")
+
+
 bot.run(TOKEN)
+
+
+backend_operations.load_data_file()
+backend_operations.data["running"] = False
+backend_operations.dump_data()
