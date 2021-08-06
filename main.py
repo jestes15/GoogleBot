@@ -18,8 +18,6 @@ import discord
 import googletrans
 import robin_stocks as robin
 import pyotp
-from discord.ext.commands import has_permissions
-# from wolframclient.evaluation import WolframLanguageSession
 from discord.ext import commands
 from dotenv import load_dotenv
 from googlesearch import search
@@ -39,13 +37,10 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 username = os.getenv('ROBINHOOD_USERNAME')
 password = os.getenv('ROBINHOOD_PASSWORD')
 
-# session = WolframLanguageSession()
 
 bot = commands.Bot(command_prefix=["Hey Google, ", "$ ", "<> "], help_command=PrettyHelp())
 today = date.today()
-
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
-
 version_num = '2.7.3'
 
 
@@ -318,12 +313,6 @@ async def GetBibleVerse(ctx, book_name: str, chapter: int, verse: int, last_vers
     await ctx.channel.send(embed=embed_var)
 
 
-@bot.command(name='solve', help='Solves any function given in Wolfram Format')
-async def mathematica(ctx, function: str):
-    evaluated = session.evaluate(function)
-    await ctx.channel.send(f'```\n{evaluated}```')
-
-
 @bot.command(name='date', help='Returns the current date')
 async def date(ctx, object2: str):
     await discord.channel.TextChannel.trigger_typing(self=ctx)
@@ -498,7 +487,8 @@ async def remove_role(ctx):
 
 bot.run(TOKEN)
 
-
 backend_operations.load_data_file()
 backend_operations.data["running"] = False
 backend_operations.dump_data()
+
+
