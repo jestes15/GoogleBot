@@ -70,7 +70,7 @@ if __name__ == "__main__":
         await ctx.channel.send(var)
 
     @has_permissions(administrator=True)
-    @bot.command(name="updatr")
+    @bot.command(name="update")
     async def update(ctx):
         dump_data()
         var = os.popen("cd .. && ./update && ./update2")
