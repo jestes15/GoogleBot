@@ -1,1 +1,23 @@
-null
+[
+  {
+    "uid": "Google",
+    "append": true,
+    "watch": true,
+    "script": "main.py",
+    "sourceDir": "~/backup/GoogleBot"
+  },
+  {
+    "uid": "Backend",
+    "append": true,
+    "watch": true,
+    "script": "backend_sayings.py",
+    "sourceDir": "~/backup/GoogleBot"
+  },
+  {
+    "uid": "Watch",
+    "append": true,
+    "watch": true,
+    "script": "main3.py",
+    "sourceDir": "~/backup/Watchdog"
+  }
+]

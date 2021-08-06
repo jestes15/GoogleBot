@@ -58,7 +58,7 @@ if __name__ == "__main__":
     @bot.command(name="stop")
     async def stop(ctx):
         dump_data()
-        var = os.popen("forever stopall")
+        var = os.popen("forever stop Google && forever stop watchdog")
         await ctx.channel.send(var.read())
 
 
