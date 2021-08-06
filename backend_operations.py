@@ -51,7 +51,7 @@ if __name__ == "__main__":
     async def restart(ctx):
         dump_data()
         var = os.popen("cd .. && ./restart")
-        await ctx.channel.send(var)
+        await ctx.channel.send(var.read())
 
 
     @has_permissions(administrator=True)
@@ -59,7 +59,7 @@ if __name__ == "__main__":
     async def stop(ctx):
         dump_data()
         var = os.popen("forever stopall")
-        await ctx.channel.send(var)
+        await ctx.channel.send(var.read())
 
 
     @has_permissions(administrator=True)
@@ -67,12 +67,12 @@ if __name__ == "__main__":
     async def start(ctx):
         dump_data()
         var = os.popen("cd .. && ./start")
-        await ctx.channel.send(var)
+        await ctx.channel.send(var.read())
 
     @has_permissions(administrator=True)
     @bot.command(name="update")
     async def update(ctx):
         dump_data()
         var = os.popen("cd .. && ./update && ./update2")
-        await ctx.channel.send(var)
+        await ctx.channel.send(var.read())
     bot.run(TOKEN)
