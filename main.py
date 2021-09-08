@@ -18,6 +18,7 @@ import discord
 import googletrans
 import robin_stocks as robin
 import pyotp
+from discord_slash import SlashCommand
 from discord.ext import commands
 from dotenv import load_dotenv
 from googlesearch import search
@@ -31,14 +32,18 @@ from discord.utils import get
 from pretty_help import PrettyHelp
 from BiblePackage import BibleGet
 import asyncio
+from discord_slash.utils.manage_commands import create_option
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 username = os.getenv('ROBINHOOD_USERNAME')
 password = os.getenv('ROBINHOOD_PASSWORD')
 
+guild_ids = [755434504457420862, 842460244797030471, 799054655648169994, 798985250595405884, 745665032573943889,
+             765806061339803679, 750163999638945872]
 
 bot = commands.Bot(command_prefix=["Hey Google, ", "$ ", "<> "], help_command=PrettyHelp())
+slash = SlashCommand(bot, sync_commands=True)
 today = date.today()
 Discord_ID = '<@!610469915442282526> or DarthBane#8863'
 version_num = '2.7.3'
@@ -61,10 +66,10 @@ async def on_ready():
     backend_operations.data["running"] = True
     backend_operations.dump_data()
 
-
-@bot.command(name='describe', help='Describes itself or a command.')
-async def describe(ctx, *, arg):
-    if arg == 'yourself':
+    @slash.slash(name="describe", guild_ids=guild_ids, options=[
+        create_option(name="arg", description="Non-req argument", option_type=3, required=False)
+    ])
+    async def _describe(ctx, arg):
         description_msg = f'I am a Discord bot created by Joshua Estes and Logan Gordy in an ' \
                           f'effort to make a bot that can do an assortment of different task determine ' \
                           f'by the users. I am currently on version {version_num}. Try "Hey Google, help" to ' \
@@ -490,5 +495,3 @@ bot.run(TOKEN)
 backend_operations.load_data_file()
 backend_operations.data["running"] = False
 backend_operations.dump_data()
-
-
